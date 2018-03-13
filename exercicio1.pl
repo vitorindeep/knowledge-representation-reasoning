@@ -61,31 +61,63 @@ cuidado(22-05-2017, 6, 2, cardioterapia, 55).
 cuidado(04-06-2017, 2, 2, cardiograma, 99).
 cuidado(15-06-2017, 1, 1, terapiafala, 5).
 
+% FEITO VITOR
 % //////////////////////////////////////////////// Ponto 1 ///////////////////////////////////////////
 %-----------------------------------------------------------------------------------------------------
 % Invariante que não permite a inserção de conhecimento de um utente com um id já existente
-
-+utente(Id, N, I, M) :: (solucoes((Id,N),utente(Id,X,Y,Z),S),
+% uso _ quando o dado não é importante e não quero saber dele
++utente(Id, N, I, M) :: (solucoes(Id, utente(Id,_,_,_), S),
 						comprimento(S,L),
 						L==1).
 
 %-----------------------------------------------------------------------------------------------------
 % Invariante que não permite a inserção de conhecimento de um prestador com um id já existente
 
-+prestador(Id, D, I,C) :: (solucoes((Id, D), prestador(Id, X, Y, Z), S),
-								comprimento(S, L),
-								L == 1).
++prestador(Id, N, E, I) :: (solucoes(Id, prestador(Id,_,_,_), S),
+							comprimento(S, L),
+							L == 1).
 
 %-----------------------------------------------------------------------------------------------------
 % Invariante que não permite a inserção de conhecimento de um cuidado quando o id do utente/prestador
 % não existem na base de conhecimento 
 
-+cuidado(D,U,S,C) :: (solucoes((S, Xs), prestador(S, Xs, Ys, Zs), Servs),
-						comprimento(Servs, Ls),
-						Ls == 1,
-						solucoes((U, Xu), utente(U, Xu, Yu, Zu), Uts),
-						comprimento(Uts, Lu),
-						Lu == 1).
++cuidado(Dat,U,P,D,C) :: (solucoes(P, prestador(P, _, _, _), LisP),
+						comprimento(LisP, NumP),
+						NumP == 1,
+						solucoes(U, utente(U, _, _, _), LisU),
+						comprimento(LisU, NumU),
+						NumU == 1).
+
+% A SER TRABALHADO VITOR
+% //////////////////////////////////////////////// Ponto 2 ///////////////////////////////////////////
+%-----------------------------------------------------------------------------------------------------
+% Invariante que não permite a remocao de conhecimento de um utente não presente na base de conhecimento
+% e com id associado a cuidado
+
+-utente(Id, N, I, M) :: (solucoes((Id),utente(Id,N,I,M),Uts),
+						comprimento(Uts,Lu),
+						Lu==1,
+						solucoes((Id),cuidado(X,Id,Y,Z),R),
+						comprimento(R,L),
+						L==0).
+
+%-----------------------------------------------------------------------------------------------------
+% Invariante que não permite a remocao de conhecimento de um prestador não presente na base de 
+% conhecimento e com o id associado a cuidado
+
+-prestador(Id, D, I,C) :: (solucoes((Id), prestador(Id,D,I,C), Servs),
+								comprimento(Servs, Lc),
+								Lc == 1,
+								solucoes((Id), cuidado(X, Y, Id, Z), R),
+								comprimento(R, L),
+								L == 0).
+
+%-----------------------------------------------------------------------------------------------------
+% Invariante que não permite a remocao de conhecimento de um cuidado não presente na base de conhecimento
+
+-cuidado(D, U,S,C) :: (solucoes((D,U,S,C), cuidado(D,U,S,C), A),
+						comprimento(A, L),
+						L == 1).
 
 % //////////////////////////////////////////////// Ponto 2 ///////////////////////////////////////////
 %-----------------------------------------------------------------------------------------------------
@@ -290,36 +322,6 @@ getTotalListServs([X|Y], T) :-
 	getTotalListServs(Y,Z),
 	getTotalByServico(X,R),
 	T is Z+R.
-
-% //////////////////////////////////////////////// Ponto 9 ///////////////////////////////////////////
-%-----------------------------------------------------------------------------------------------------
-% Invariante que não permite a remocao de conhecimento de um utente não presente na base de conhecimento
-% e com id associado a cuidado
-
--utente(Id, N, I, M) :: (solucoes((Id),utente(Id,N,I,M),Uts),
-						comprimento(Uts,Lu),
-						Lu==1,
-						solucoes((Id),cuidado(X,Id,Y,Z),R),
-						comprimento(R,L),
-						L==0).
-
-%-----------------------------------------------------------------------------------------------------
-% Invariante que não permite a remocao de conhecimento de um prestador não presente na base de 
-% conhecimento e com o id associado a cuidado
-
--prestador(Id, D, I,C) :: (solucoes((Id), prestador(Id,D,I,C), Servs),
-								comprimento(Servs, Lc),
-								Lc == 1,
-								solucoes((Id), cuidado(X, Y, Id, Z), R),
-								comprimento(R, L),
-								L == 0).
-
-%-----------------------------------------------------------------------------------------------------
-% Invariante que não permite a remocao de conhecimento de um cuidado não presente na base de conhecimento
-
--cuidado(D, U,S,C) :: (solucoes((D,U,S,C), cuidado(D,U,S,C), A),
-						comprimento(A, L),
-						L == 1).
 
 % ////////////////////////////////////////// Funções auxiliares //////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
