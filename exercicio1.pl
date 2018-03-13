@@ -88,36 +88,36 @@ cuidado(15-06-2017, 1, 1, terapiafala, 5).
 						comprimento(LisU, NumU),
 						NumU == 1).
 
-% A SER TRABALHADO VITOR
+% FEITO VITOR
 % //////////////////////////////////////////////// Ponto 2 ///////////////////////////////////////////
 %-----------------------------------------------------------------------------------------------------
 % Invariante que não permite a remocao de conhecimento de um utente não presente na base de conhecimento
 % e com id associado a cuidado
 
--utente(Id, N, I, M) :: (solucoes((Id),utente(Id,N,I,M),Uts),
-						comprimento(Uts,Lu),
+-utente(Id, N, I, M) :: (solucoes(Id, utente(Id,N,I,M), Uts),
+						comprimento(Uts, Lu),
 						Lu==1,
-						solucoes((Id),cuidado(X,Id,Y,Z),R),
-						comprimento(R,L),
-						L==0).
+						solucoes(Id, cuidado(_,Id,_,_,_), Cuids),
+						comprimento(Cuids, Lc),
+						Lc == 0).
 
 %-----------------------------------------------------------------------------------------------------
 % Invariante que não permite a remocao de conhecimento de um prestador não presente na base de 
 % conhecimento e com o id associado a cuidado
 
--prestador(Id, D, I,C) :: (solucoes((Id), prestador(Id,D,I,C), Servs),
-								comprimento(Servs, Lc),
-								Lc == 1,
-								solucoes((Id), cuidado(X, Y, Id, Z), R),
-								comprimento(R, L),
-								L == 0).
+-prestador(Id, N, E, I) :: (solucoes(Id, prestador(Id,_,_,_), Prests),
+							comprimento(Prests, Lp),
+							Lp == 1,
+							solucoes(Id, cuidado(_,_,Id,_,_), Cuids),
+							comprimento(Cuids, Lc),
+							Lc == 0).
 
 %-----------------------------------------------------------------------------------------------------
 % Invariante que não permite a remocao de conhecimento de um cuidado não presente na base de conhecimento
 
--cuidado(D, U,S,C) :: (solucoes((D,U,S,C), cuidado(D,U,S,C), A),
-						comprimento(A, L),
-						L == 1).
+-cuidado(Dat, U, P, D, C) :: (solucoes((Dat,U,P,D,C), cuidado(Dat,U,P,D,C), Cuids),
+							comprimento(Cuids, L),
+							L == 1).
 
 % //////////////////////////////////////////////// Ponto 2 ///////////////////////////////////////////
 %-----------------------------------------------------------------------------------------------------
