@@ -119,28 +119,27 @@ cuidado(15-06-2017, 1, 1, terapiafala, 5).
 							comprimento(Cuids, L),
 							L == 1).
 
-% //////////////////////////////////////////////// Ponto 2 ///////////////////////////////////////////
+% FEITO VITOR
+% //////////////////////////////////////////////// Ponto 3 ///////////////////////////////////////////
 %-----------------------------------------------------------------------------------------------------
-% Extensao do predicado utentesPNome: Nome,Resultado -> {V,F}
+% Extensao do predicado utentesPNome: Nome,Lis -> {V,F}
 
-utentesPNome(Nome,Resultado) :- 
-	solucoes((IdUt,Nome,Idade,Morada),
-	utente(IdUt,Nome,Idade,Morada),Resultado).
-
-%-----------------------------------------------------------------------------------------------------
-% Extensao do predicado utentesPIdade: Idade,Resultado -> {V,F}
-
-utentesPIdade(Idade,Resultado) :-
-	solucoes((IdUt,Nome,Idade,Morada),
-	utente(IdUt,Nome,Idade,Morada),Resultado).
+utentesPNome(Nome, Lis) :- 
+	solucoes((IdUt,Nome,Idade,Morada), utente(IdUt,Nome,Idade,Morada), Lis).
 
 %-----------------------------------------------------------------------------------------------------
-% Extensao do predicado utentesPMorada: Morada,Resultado -> {V,F}
+% Extensao do predicado utentesPIdade: Idade,Lis -> {V,F}
 
-utentesPMorada(Morada,Resultado) :-
-	solucoes((IdUt,Nome,Idade,Morada),
-	utente(IdUt,Nome,Idade,Morada),Resultado).
+utentesPIdade(Idade, Lis) :-
+	solucoes((IdUt,Nome,Idade,Morada), utente(IdUt,Nome,Idade,Morada), Lis).
 
+%-----------------------------------------------------------------------------------------------------
+% Extensao do predicado utentesPMorada: Morada,Lis -> {V,F}
+
+utentesPMorada(Morada,Lis) :-
+	solucoes((IdUt,Nome,Idade,Morada), utente(IdUt,Nome,Idade,Morada), Lis).
+
+% DAQUI PARA BAIXO É O QUE ELES TINHAM A MAIS (N É PRECISO PARA O PT 3)
 %-----------------------------------------------------------------------------------------------------
 % Extensao do predicado utentesQGastaramMaisQX: Valor,Resultado -> {V,F}
 
@@ -173,7 +172,7 @@ listarUtentesMaisFreqAux([],L,[]).
 listarUtentesMaisFreqAux([H|T],L,[(H,Q)|R]):-
 	quantosTem(H,L,Q),listarUtentesMaisFreqAux(T,L,R).
 
-% //////////////////////////////////////////////// Ponto 3 ///////////////////////////////////////////
+% //////////////////////////////////////////////// Ponto 4 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado instituicoes: Valor,Resultado -> {V,F}
 
