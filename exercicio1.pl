@@ -207,18 +207,32 @@ instituicoes(Resultado) :-
 % PONTO 6,7 -> carlos
 % PONTO 8,9 -> MARCOS
 
-% //////////////////////////////////////////////// Ponto ? ///////////////////////////////////////////
+% FEITO DIANA
+% //////////////////////////////////////////////// Ponto 5 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
-% Extensao do predicado getCuidadosbyInstituicao: I,R -> {V,F}
+% Extensao do predicado cuidadosPInstituicao: Inst,Result -> {V,F}
 
-getCuidadosbyInstituicao(I,S) :-
-	solucoes((Ss,Desc,I,Cid),prestador(Ss,Desc,I,Cid),S).
+cuidadosPInstituicao(Inst,List) :-
+	solucoes((Dat,Ut,Prest,Desc,Cust), prestador(_,_,_,Inst), L),
+	removeDup(L,List).
 
 
-% Extensao do predicado getCuidadosbyCidade: C,R -> {V,F}
+% ----------------------------------------------------------------------------------------------------
+% Extensao do predicado cuidadosPCidade: Cidade,Result -> {V,F}
 
-getCuidadosbyCidade(C,S) :-
-	solucoes((Ss,Desc,Ins,C),prestador(Ss,Desc,Ins,C),S).
+cuidadosPCidade(Cidade,List) :-
+	solucoes((Dat,Ut,Prest,Desc,Cust), utente(_,_,_,Cidade), L),
+	removeDup(L,List).
+
+
+% ----------------------------------------------------------------------------------------------------
+% Extensao do predicado cuidadosPDatas: Data,Result -> {V,F}
+
+cuidadosPDatas(Data,List) :-
+	solucoes((Dat,Ut,Prest,Desc,Cust), cuidado(Data,_,_,_,_), L),
+	removeDup(L,List).
+
+
 
 % //////////////////////////////////////////////// Ponto ? ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
