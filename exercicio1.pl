@@ -46,7 +46,7 @@ prestador(5, pres5, neurologia, hsmm).
 prestador(6, pres6, psiquiatria, hsog).
 prestador(7, pres7, oftamologia, htrofa).
 prestador(8, pres8, reumatologia, hospitalbraga).
-
+prestador(9, pres9, psiquiatria, hospitalbraga).
 
 %-----------------------------------------------------------------------------------------------------
 % Extensao do predicado cuidado: Data,IdUt,IdPrest,Descricao,Custo -> {V,F}
@@ -62,8 +62,8 @@ cuidado(20-04-2017, 6, 7, retinoterapia, 35).
 cuidado(22-05-2017, 6, 2, cardioterapia, 55).
 cuidado(04-06-2017, 2, 2, cardiograma, 99).
 cuidado(15-06-2017, 1, 1, terapiafala, 5).
-cuidado(17-06-2017, 2, 8, reumatomagrafia, 350).
-
+cuidado(18-06-2017, 2, 8, reumatomagrafia, 350).
+cuidado(18-06-2017, 2, 9, cbt, 10).
 
 % FEITO VITOR
 % //////////////////////////////////////////////// Ponto 1 ///////////////////////////////////////////
@@ -282,16 +282,12 @@ getAtosByUt(U,R) :-
 	cuidado(D,U,S,C),R).
 
 % //////////////////////////////////////////////// Ponto 8 ///////////////////////////////////////////
-% ----------------------------------------------------------------------------------------------------
-% Extensao do predicado getInstPrestByUtente: Id,Resultado -> {V,F}
-
 % Feito - Marcos
 %
-% utente(IdUt,Nome,Idade,Morada).
-% prestador(IdPrest,Nome,Especialidade,Instituicao).
-% cuidado(Data,IdUt,IdPrest,Descricao,Custo).
-%
 % Enunciado: Determinar todas as instituições/prestadores a que um utente já recorreu;
+
+% ----------------------------------------------------------------------------------------------------
+% Extensao do predicado getInstPrestByUtente: Id,Resultado -> {V,F}
 %
 % getInstPrestByUtente(IdUtente, R)
 %   IdUtente: ID do utente
@@ -300,54 +296,63 @@ getAtosByUt(U,R) :-
 % ObtémIDs de prestadores que estão registados em cuidados do utente
 % Usa função auxiliar para obter (instituição, prestador) a partir de IDs de prestadores
 getInstPrestByUtente(IdUtente, R) :-
-	solucoes(IdPrestador, cuidado(Data, IdUtente, IdPrestador, Descricao, Custo), S),
+	solucoes(IdPrestador, cuidado(_, IdUtente, IdPrestador, _, _), S),
 	removeDup(S, Resultado),
 	getInstPrestByUtenteAux(Resultado, R).
 
 % Extensao do predicado getInstituicoesByUtenteAux: L,Resultado -> {V,F}
-
+%
 % Recebe lista de IDs de prestadores
-% Obtém lista de instituições desses prestadores
+% Obtém lista de (Instituicao, IdPrestador) desses prestadores
 getInstPrestByUtenteAux([], []).
 getInstPrestByUtenteAux([IdPrestador | T], [(Instituicao, IdPrestador) | Resto]) :-
-	prestador(IdPrestador, Nome, Especialidade, Instituicao),
+	prestador(IdPrestador, _, _, Instituicao),
 	getInstPrestByUtenteAux(T, Resto).
 
-% A fazer - Marcos
 % //////////////////////////////////////////////// Ponto 9 ///////////////////////////////////////////
+% Feito - Marcos
+%
+% Enunciado: Calcular o custo total dos cuidados de saúde por utente/especialidade/prestador/datas;
+
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado getTotalByUtente: IdUtente, Total -> {V,F}
-
-getTotalByUtente(Id,T) :-
-	solucoes(C, cuidado(D, Id, S, C), TotUtente),
-	somatorio(TotUtente,T).
+getTotalByUtente(IdUtente, T) :-
+	solucoes(Custo, cuidado(_, IdUtente, _, _, Custo), S),
+	somatorio(S, T).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensao do predicado getTotalByServiço: IdServiço, Total -> {V,F}
+% Extensao do predicado getTotalByPrestador: IdPrestador, Total -> {V,F}
+getTotalByPrestador(IdPrestador, T) :-
+	solucoes(Custo, cuidado(_, _, IdPrestador, _, Custo), S),
+	somatorio(S, T).
 
-getTotalByServico(Id,T) :-
-	solucoes(C, cuidado(D, U, Id, C), TotServico),
-	somatorio(TotServico,T).
+% ----------------------------------------------------------------------------------------------------
+% Extensao do predicado getTotalByPrestadores: IdPrestador[], Total -> {V,F}
+getTotalByPrestadores([], 0).
+getTotalByPrestadores([IdPrestador | L], T) :-
+	getTotalByPrestador(IdPrestador, Custo),
+	getTotalByPrestadores(L, RestoDoTotal),
+	T is RestoDoTotal + Custo.
 
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado getTotalByData: Data, Total -> {V,F}
-
-getTotalByData(D,T) :-
-	solucoes(C, cuidado(D, U, S, C), TotData),
-	somatorio(TotData,T).
+getTotalByData(Data, T) :-
+	solucoes(Custo, cuidado(Data, _, _, _, Custo), S),
+	somatorio(S, T).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensao do predicado getTotalByInstituicao: Instituicao, Total -> {V,F}
+% Extensao do predicado getTotalByDatas: Data[], Total -> {V,F}
+getTotalByDatas([], 0).
+getTotalByDatas([Data | L], T) :-
+	getTotalByData(Data, Custo),
+	getTotalByDatas(L, RestoDoTotal),
+	T is RestoDoTotal + Custo.
 
-getTotalByInstituicao(I,T) :-
-	solucoes(Id, prestador(Id, D, I, C), Servs),
-	getTotalListServs(Servs,T).
-getTotalListServs([],T) :-
-	T is 0.
-getTotalListServs([X|Y], T) :-
-	getTotalListServs(Y,Z),
-	getTotalByServico(X,R),
-	T is Z+R.
+% ----------------------------------------------------------------------------------------------------
+% Extensao do predicado getTotalByEspecialidade: Especialidade, Total -> {V,F}
+getTotalByEspecialidade(Especialidade, T) :-
+	solucoes(IdPrest, prestador(IdPrest, _, Especialidade, _), Prestadores),
+	getTotalByPrestadores(Prestadores, T).
 
 % ////////////////////////////////////////// Funçőes auxiliares //////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
