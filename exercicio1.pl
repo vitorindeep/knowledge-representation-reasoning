@@ -45,6 +45,8 @@ prestador(4, pres4, ginecologia, hospitalbraga).
 prestador(5, pres5, neurologia, hsmm).
 prestador(6, pres6, psiquiatria, hsog).
 prestador(7, pres7, oftamologia, htrofa).
+prestador(8, pres8, reumatologia, hospitalbraga).
+
 
 %-----------------------------------------------------------------------------------------------------
 % Extensao do predicado cuidado: Data,IdUt,IdPrest,Descricao,Custo -> {V,F}
@@ -60,6 +62,8 @@ cuidado(20-04-2017, 6, 7, retinoterapia, 35).
 cuidado(22-05-2017, 6, 2, cardioterapia, 55).
 cuidado(04-06-2017, 2, 2, cardiograma, 99).
 cuidado(15-06-2017, 1, 1, terapiafala, 5).
+cuidado(17-06-2017, 2, 8, reumatomagrafia, 350).
+
 
 % FEITO VITOR
 % //////////////////////////////////////////////// Ponto 1 ///////////////////////////////////////////
@@ -277,23 +281,40 @@ getAtosByUt(U,R) :-
     solucoes((D,U,S,C),
 	cuidado(D,U,S,C),R).
 
-% //////////////////////////////////////////////// Ponto ? ///////////////////////////////////////////
+% //////////////////////////////////////////////// Ponto 8 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
-% Extensao do predicado getInstSerByUt: Id,Resultado -> {V,F}
+% Extensao do predicado getInstPrestByUtente: Id,Resultado -> {V,F}
 
-getInstSerByUt(IdUt,Resultado2) :-
-	solucoes(IdPrest,cuidado(Data,IdUt,IdPrest,Custo),R),
-	removeDup(R,Resultado),
-	getInstSerByUtAux(Resultado,Resultado2).
+% Feito - Marcos
+%
+% utente(IdUt,Nome,Idade,Morada).
+% prestador(IdPrest,Nome,Especialidade,Instituicao).
+% cuidado(Data,IdUt,IdPrest,Descricao,Custo).
+%
+% Enunciado: Determinar todas as instituições/prestadores a que um utente já recorreu;
+%
+% getInstPrestByUtente(IdUtente, R)
+%   IdUtente: ID do utente
+%   R: Lista de pares (Instituição, IdPrestador)
+%
+% ObtémIDs de prestadores que estão registados em cuidados do utente
+% Usa função auxiliar para obter (instituição, prestador) a partir de IDs de prestadores
+getInstPrestByUtente(IdUtente, R) :-
+	solucoes(IdPrestador, cuidado(Data, IdUtente, IdPrestador, Descricao, Custo), S),
+	removeDup(S, Resultado),
+	getInstPrestByUtenteAux(Resultado, R).
 
-% Extensao do predicado getInstByUtAux: L,Resultado -> {V,F}
+% Extensao do predicado getInstituicoesByUtenteAux: L,Resultado -> {V,F}
 
-getInstSerByUtAux([],[]).
-getInstSerByUtAux([IdPrest|T],[(Instituicao,Especialidade)|Resto]) :-
-	prestador(IdPrest,Especialidade,Instituicao,Cidade),
-	getInstSerByUtAux(T,Resto).
+% Recebe lista de IDs de prestadores
+% Obtém lista de instituições desses prestadores
+getInstPrestByUtenteAux([], []).
+getInstPrestByUtenteAux([IdPrestador | T], [(Instituicao, IdPrestador) | Resto]) :-
+	prestador(IdPrestador, Nome, Especialidade, Instituicao),
+	getInstPrestByUtenteAux(T, Resto).
 
-% //////////////////////////////////////////////// Ponto ? ///////////////////////////////////////////
+% A fazer - Marcos
+% //////////////////////////////////////////////// Ponto 9 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado getTotalByUtente: IdUtente, Total -> {V,F}
 
