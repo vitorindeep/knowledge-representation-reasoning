@@ -1,6 +1,6 @@
 %-----------------------------------------------------------------------------------------------------
 % SIST. REPR. CONHECIMENTO E RACIOCINIO - MiEI/3
-% Trabalho prático nº1
+% Trabalho prÃ¡tico nÅŸ1
 
 %-----------------------------------------------------------------------------------------------------
 % SICStus PROLOG: Declaracoes iniciais
@@ -64,22 +64,22 @@ cuidado(15-06-2017, 1, 1, terapiafala, 5).
 % FEITO VITOR
 % //////////////////////////////////////////////// Ponto 1 ///////////////////////////////////////////
 %-----------------------------------------------------------------------------------------------------
-% Invariante que não permite a inserção de conhecimento de um utente com um id já existente
-% uso _ quando o dado não é importante e não quero saber dele
+% Invariante que nÄƒo permite a inserÃ§Äƒo de conhecimento de um utente com um id jÃ¡ existente
+% uso _ quando o dado nÄƒo Ã© importante e nÄƒo quero saber dele
 +utente(Id, N, I, M) :: (solucoes(Id, utente(Id,_,_,_), S),
 						comprimento(S,L),
 						L==1).
 
 %-----------------------------------------------------------------------------------------------------
-% Invariante que não permite a inserção de conhecimento de um prestador com um id já existente
+% Invariante que nÄƒo permite a inserÃ§Äƒo de conhecimento de um prestador com um id jÃ¡ existente
 
 +prestador(Id, N, E, I) :: (solucoes(Id, prestador(Id,_,_,_), S),
 							comprimento(S, L),
 							L == 1).
 
 %-----------------------------------------------------------------------------------------------------
-% Invariante que não permite a inserção de conhecimento de um cuidado quando o id do utente/prestador
-% não existem na base de conhecimento 
+% Invariante que nÄƒo permite a inserÃ§Äƒo de conhecimento de um cuidado quando o id do utente/prestador
+% nÄƒo existem na base de conhecimento
 
 +cuidado(Dat,U,P,D,C) :: (solucoes(P, prestador(P, _, _, _), LisP),
 						comprimento(LisP, NumP),
@@ -91,7 +91,7 @@ cuidado(15-06-2017, 1, 1, terapiafala, 5).
 % FEITO VITOR
 % //////////////////////////////////////////////// Ponto 2 ///////////////////////////////////////////
 %-----------------------------------------------------------------------------------------------------
-% Invariante que não permite a remocao de conhecimento de um utente não presente na base de conhecimento
+% Invariante que nÄƒo permite a remocao de conhecimento de um utente nÄƒo presente na base de conhecimento
 % e com id associado a cuidado
 
 -utente(Id, N, I, M) :: (solucoes(Id, utente(Id,N,I,M), Uts),
@@ -102,7 +102,7 @@ cuidado(15-06-2017, 1, 1, terapiafala, 5).
 						Lc == 0).
 
 %-----------------------------------------------------------------------------------------------------
-% Invariante que não permite a remocao de conhecimento de um prestador não presente na base de 
+% Invariante que nÄƒo permite a remocao de conhecimento de um prestador nÄƒo presente na base de
 % conhecimento e com o id associado a cuidado
 
 -prestador(Id, N, E, I) :: (solucoes(Id, prestador(Id,_,_,_), Prests),
@@ -113,7 +113,7 @@ cuidado(15-06-2017, 1, 1, terapiafala, 5).
 							Lc == 0).
 
 %-----------------------------------------------------------------------------------------------------
-% Invariante que não permite a remocao de conhecimento de um cuidado não presente na base de conhecimento
+% Invariante que nÄƒo permite a remocao de conhecimento de um cuidado nÄƒo presente na base de conhecimento
 
 -cuidado(Dat, U, P, D, C) :: (solucoes((Dat,U,P,D,C), cuidado(Dat,U,P,D,C), Cuids),
 							comprimento(Cuids, L),
@@ -124,7 +124,7 @@ cuidado(15-06-2017, 1, 1, terapiafala, 5).
 %-----------------------------------------------------------------------------------------------------
 % Extensao do predicado utentesPNome: Nome,Lis -> {V,F}
 
-utentesPNome(Nome, Lis) :- 
+utentesPNome(Nome, Lis) :-
 	solucoes((IdUt,Nome,Idade,Morada), utente(IdUt,Nome,Idade,Morada), Lis).
 
 %-----------------------------------------------------------------------------------------------------
@@ -139,7 +139,7 @@ utentesPIdade(Idade, Lis) :-
 utentesPMorada(Morada,Lis) :-
 	solucoes((IdUt,Nome,Idade,Morada), utente(IdUt,Nome,Idade,Morada), Lis).
 
-% DAQUI PARA BAIXO É O QUE ELES TINHAM A MAIS (N É PRECISO PARA O PT 3)
+% DAQUI PARA BAIXO Ã‰ O QUE ELES TINHAM A MAIS (N Ã‰ PRECISO PARA O PT 3)
 %-----------------------------------------------------------------------------------------------------
 % Extensao do predicado utentesQGastaramMaisQX: Valor,Resultado -> {V,F}
 
@@ -166,7 +166,7 @@ listarUtentesMaisFreq(Resultado) :-
 	ordenarDecresc(R3,Resultado).
 
 % Extensao do predicado listarUtentesMaisFreqAux: Utentes,Resultado -> {V,F}
-% Esta funcao pega em cada elemento da 1ª lista e verifica quantas vezes aparece na segunda, no fim devolve um par com cada elemento e o nr de vezes q apareceu.
+% Esta funcao pega em cada elemento da 1Åž lista e verifica quantas vezes aparece na segunda, no fim devolve um par com cada elemento e o nr de vezes q apareceu.
 
 listarUtentesMaisFreqAux([],L,[]).
 listarUtentesMaisFreqAux([H|T],L,[(H,Q)|R]):-
@@ -181,7 +181,7 @@ instituicoes(Resultado) :-
 	solucoes(Instituicao, prestador(_,_,_,Instituicao), Insts),
 	removeDup(Insts,Resultado).
 
-% DAQUI PARA BAIXO NÃO MEXI, É TUDO DO HUGO
+% DAQUI PARA BAIXO NÄ‚O MEXI, Ã‰ TUDO DO HUGO
 % PONTO 5 -> diana
 % PONTO 6,7 -> carlos
 % PONTO 8,9 -> MARCOS
@@ -204,7 +204,7 @@ getCuidadosbyCidade(C,S) :-
 % Extensao do predicado getUtBySer: D,R -> {V,F}
 
 getUtBySer(D,R) :-
-    solucoes(Ss,prestador(Ss,D,_,_),R1), 
+    solucoes(Ss,prestador(Ss,D,_,_),R1),
     getUtBySerAux(R1,R2),
     getUt(R2,R).
 
@@ -220,7 +220,7 @@ getUtBySerAux([IdPrest|Y],R) :-
 % Extensao do predicado getUtByIns: I,R -> {V,F}
 
 getUtByIns(I,R) :-
-	solucoes(Ss ,prestador(Ss,_,I,_), R1), 
+	solucoes(Ss ,prestador(Ss,_,I,_), R1),
 	getUtByInsAux(R1,R2),
 	getUt(R2,R).
 
@@ -302,7 +302,7 @@ getTotalByUtente(Id,T) :-
 	somatorio(TotUtente,T).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensao do predicado getTotalByServiço: IdServiço, Total -> {V,F}
+% Extensao do predicado getTotalByServiÃ§o: IdServiÃ§o, Total -> {V,F}
 
 getTotalByServico(Id,T) :-
 	solucoes(C, cuidado(D, U, Id, C), TotServico),
@@ -321,24 +321,24 @@ getTotalByData(D,T) :-
 getTotalByInstituicao(I,T) :-
 	solucoes(Id, prestador(Id, D, I, C), Servs),
 	getTotalListServs(Servs,T).
-getTotalListServs([],T) :- 
+getTotalListServs([],T) :-
 	T is 0.
 getTotalListServs([X|Y], T) :-
 	getTotalListServs(Y,Z),
 	getTotalByServico(X,R),
 	T is Z+R.
 
-% ////////////////////////////////////////// Funções auxiliares //////////////////////////////////////
+% ////////////////////////////////////////// FunÃ§Å‘es auxiliares //////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
-% Extensão do predicado evoluacao: Termo -> {V,F}
- 
+% ExtensÄƒo do predicado evoluacao: Termo -> {V,F}
+
 evoluacao(Termo) :-
 	solucoes(Invariante, +Termo::Invariante, Lista),
 	insercao(Termo),
 	teste(Lista).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensão do predicado insercao: Termo -> {V,F}
+% ExtensÄƒo do predicado insercao: Termo -> {V,F}
 
 insercao(T) :-
 	assert(T).
@@ -346,7 +346,7 @@ insercao(T) :-
 	retract(T),!,fail.
 
 % ----------------------------------------------------------------------------------------------------
-% Extensão do predicado involucao: Termo -> {V,F}
+% ExtensÄƒo do predicado involucao: Termo -> {V,F}
 
 involucao(Termo) :-
 	solucoes(Invariante, -Termo::Invariante, Lista),
@@ -354,7 +354,7 @@ involucao(Termo) :-
 	remocao(Termo).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensão do predicado remocao: Termo -> {V,F}
+% ExtensÄƒo do predicado remocao: Termo -> {V,F}
 
 remocao(T) :-
 	retract(T).
@@ -362,7 +362,7 @@ remocao(T) :-
 	assert(T),!,fail.
 
 % ----------------------------------------------------------------------------------------------------
-% Extensão do predicado teste: Lista -> {V,F}
+% ExtensÄƒo do predicado teste: Lista -> {V,F}
 
 teste([]).
 teste([I|L]) :-
@@ -370,13 +370,13 @@ teste([I|L]) :-
 	teste(L).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensão do predicado solucoes: X,Y,Z -> {V,F}
+% ExtensÄƒo do predicado solucoes: X,Y,Z -> {V,F}
 
 solucoes(X,Y,Z) :-
 	findall(X,Y,Z).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensão do predicado comprimento: Lista, Resultado -> {V,F}
+% ExtensÄƒo do predicado comprimento: Lista, Resultado -> {V,F}
 
 comprimento(X,Z):-
 	length(X,Z).
@@ -384,7 +384,7 @@ comprimento(X,Z):-
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado somatorio: lista, resultado -> {V,F}
 
-somatorio([], 0). 
+somatorio([], 0).
 somatorio([X|Y], R) :-
 	somatorio(Y,G),
 	R is X+G.
@@ -418,12 +418,12 @@ removeDup([X|T],R):-
 	removeDup(T,R).
 removeDup([X|T],[X|R]):-
 	nao(pertence(X,T)),
-	removeDup(T,R).	
+	removeDup(T,R).
 
 % Extensao do predicado ordenarDecresc: L,Resultado -> {V,F}
 
 ordenarDecresc([X],[X]).
-ordenarDecresc([X|Y],T):- 
+ordenarDecresc([X|Y],T):-
 	ordenarDecresc(Y,R),
 	insereOrdenado(X,R,T).
 
