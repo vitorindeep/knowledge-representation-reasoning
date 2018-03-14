@@ -70,6 +70,7 @@ cuidado(17-06-2017, 2, 8, reumatomagrafia, 350).
 %-----------------------------------------------------------------------------------------------------
 % Invariante que năo permite a inserçăo de conhecimento de um utente com um id já existente
 % uso _ quando o dado năo é importante e năo quero saber dele
+
 +utente(Id, N, I, M) :: (solucoes(Id, utente(Id,_,_,_), S),
 						comprimento(S,L),
 						L==1).
@@ -91,6 +92,22 @@ cuidado(17-06-2017, 2, 8, reumatomagrafia, 350).
 						solucoes(U, utente(U, _, _, _), LisU),
 						comprimento(LisU, NumU),
 						NumU == 1).
+
+% ----------------------------------------------------------------------------------------------------
+% Extensăo do predicado inserir: Termo -> {V,F}
+
+inserir(Termo) :-
+	solucoes(Invariante, +Termo::Invariante, Lista),
+	insercao(Termo),
+	teste(Lista).
+
+% ----------------------------------------------------------------------------------------------------
+% Extensăo do predicado remover: Termo -> {V,F}
+
+remover(Termo) :-
+	solucoes(Invariante, -Termo::Invariante, Lista),
+	teste(Lista),
+	remocao(Termo).
 
 % FEITO VITOR
 % //////////////////////////////////////////////// Ponto 2 ///////////////////////////////////////////
@@ -351,28 +368,12 @@ getTotalListServs([X|Y], T) :-
 
 % ////////////////////////////////////////// Funçőes auxiliares //////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado evoluacao: Termo -> {V,F}
-
-evoluacao(Termo) :-
-	solucoes(Invariante, +Termo::Invariante, Lista),
-	insercao(Termo),
-	teste(Lista).
-
-% ----------------------------------------------------------------------------------------------------
 % Extensăo do predicado insercao: Termo -> {V,F}
 
 insercao(T) :-
 	assert(T).
 insercao(T) :-
 	retract(T),!,fail.
-
-% ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado involucao: Termo -> {V,F}
-
-involucao(Termo) :-
-	solucoes(Invariante, -Termo::Invariante, Lista),
-	teste(Lista),
-	remocao(Termo).
 
 % ----------------------------------------------------------------------------------------------------
 % Extensăo do predicado remocao: Termo -> {V,F}
