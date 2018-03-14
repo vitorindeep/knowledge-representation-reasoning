@@ -178,10 +178,15 @@ listarUtentesMaisFreqAux([H|T],L,[(H,Q)|R]):-
 % Extensao do predicado instituicoes: Resultado -> {V,F}
 
 instituicoes(Resultado) :-
-	solucoes(Instituicao, prestador(IdPrest,Nome,Especialidade,Instituicao), Insts),
+	solucoes(Instituicao, prestador(_,_,_,Instituicao), Insts),
 	removeDup(Insts,Resultado).
 
-% //////////////////////////////////////////////// Ponto 4 ///////////////////////////////////////////
+% DAQUI PARA BAIXO NÃO MEXI, É TUDO DO HUGO
+% PONTO 5 -> diana
+% PONTO 6,7 -> carlos
+% PONTO 8,9 -> MARCOS
+
+% //////////////////////////////////////////////// Ponto ? ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado getCuidadosbyInstituicao: I,R -> {V,F}
 
@@ -194,7 +199,7 @@ getCuidadosbyInstituicao(I,S) :-
 getCuidadosbyCidade(C,S) :-
 	solucoes((Ss,Desc,Ins,C),prestador(Ss,Desc,Ins,C),S).
 
-% //////////////////////////////////////////////// Ponto 5 ///////////////////////////////////////////
+% //////////////////////////////////////////////// Ponto ? ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado getUtBySer: D,R -> {V,F}
 
@@ -235,7 +240,7 @@ getUt([IdUt|Y],R) :-
  	getUt(Y,R2),
 	concatena(R1,R2,R).
 
-% //////////////////////////////////////////////// Ponto 6 ///////////////////////////////////////////
+% //////////////////////////////////////////////// Ponto ? ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado getAtosBySer: S,R -> {V,F}
 
@@ -272,7 +277,7 @@ getAtosByUt(U,R) :-
     solucoes((D,U,S,C),
 	cuidado(D,U,S,C),R).
 
-% //////////////////////////////////////////////// Ponto 7 ///////////////////////////////////////////
+% //////////////////////////////////////////////// Ponto ? ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado getInstSerByUt: Id,Resultado -> {V,F}
 
@@ -288,7 +293,7 @@ getInstSerByUtAux([IdPrest|T],[(Instituicao,Especialidade)|Resto]) :-
 	prestador(IdPrest,Especialidade,Instituicao,Cidade),
 	getInstSerByUtAux(T,Resto).
 
-% //////////////////////////////////////////////// Ponto 8 ///////////////////////////////////////////
+% //////////////////////////////////////////////// Ponto ? ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado getTotalByUtente: IdUtente, Total -> {V,F}
 
