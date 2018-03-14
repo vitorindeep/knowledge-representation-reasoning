@@ -172,13 +172,14 @@ listarUtentesMaisFreqAux([],L,[]).
 listarUtentesMaisFreqAux([H|T],L,[(H,Q)|R]):-
 	quantosTem(H,L,Q),listarUtentesMaisFreqAux(T,L,R).
 
+% FEITO VITOR
 % //////////////////////////////////////////////// Ponto 4 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
-% Extensao do predicado instituicoes: Valor,Resultado -> {V,F}
+% Extensao do predicado instituicoes: Resultado -> {V,F}
 
 instituicoes(Resultado) :-
-	solucoes(Instituicao,prestador(IdPrest,Especialidade,Instituicao,Cidade),R),
-	removeDup(R,Resultado).
+	solucoes(Instituicao, prestador(IdPrest,Nome,Especialidade,Instituicao), Insts),
+	removeDup(Insts,Resultado).
 
 % //////////////////////////////////////////////// Ponto 4 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
