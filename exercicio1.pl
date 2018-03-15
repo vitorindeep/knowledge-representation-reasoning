@@ -333,14 +333,14 @@ getInstPrestByUtente(IdUtente, R) :-
 	removeDup(S, Resultado),
 	getInstPrestByUtenteAux(Resultado, R).
 
-% Extensao do predicado getInstituicoesByUtenteAux: L,Resultado -> {V,F}
+% Extensao do predicado getInstPrestByPrestadores: L,Resultado -> {V,F}
 %
 % Recebe lista de IDs de prestadores
 % Obtém lista de (Instituicao, IdPrestador) desses prestadores
-getInstPrestByUtenteAux([], []).
-getInstPrestByUtenteAux([IdPrestador | T], [(Instituicao, IdPrestador) | Resto]) :-
+getInstPrestByPrestadores([], []).
+getInstPrestByPrestadores([IdPrestador | T], [(Instituicao, IdPrestador) | Resto]) :-
 	prestador(IdPrestador, _, _, Instituicao),
-	getInstPrestByUtenteAux(T, Resto).
+	getInstPrestByPrestadores(T, Resto).
 
 % //////////////////////////////////////////////// Ponto 9 ///////////////////////////////////////////
 % Feito - Marcos
