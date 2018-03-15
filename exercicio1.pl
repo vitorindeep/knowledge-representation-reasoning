@@ -65,7 +65,7 @@ cuidado(15-06-2017, 1, 1, terapiafala, 5).
 cuidado(17-06-2017, 2, 8, reumatomagrafia, 350).
 
 
-% FEITO VITOR
+% FEITO VITOR E VERIFICADO
 % //////////////////////////////////////////////// Ponto 1 ///////////////////////////////////////////
 %-----------------------------------------------------------------------------------------------------
 % Invariante que năo permite a inserçăo de conhecimento de um utente com um id já existente
@@ -95,6 +95,7 @@ cuidado(17-06-2017, 2, 8, reumatomagrafia, 350).
 
 % ----------------------------------------------------------------------------------------------------
 % Extensăo do predicado inserir: Termo -> {V,F}
+% mesmo que EVOLUCAO
 
 inserir(Termo) :-
 	solucoes(Invariante, +Termo::Invariante, Lista),
@@ -109,7 +110,7 @@ remover(Termo) :-
 	teste(Lista),
 	remocao(Termo).
 
-% FEITO VITOR
+% FEITO VITOR E VERIFICADO
 % //////////////////////////////////////////////// Ponto 2 ///////////////////////////////////////////
 %-----------------------------------------------------------------------------------------------------
 % Invariante que năo permite a remocao de conhecimento de um utente năo presente na base de conhecimento
@@ -140,7 +141,7 @@ remover(Termo) :-
 							comprimento(Cuids, L),
 							L == 1).
 
-% FEITO VITOR
+% FEITO VITOR E VERIFICADO
 % //////////////////////////////////////////////// Ponto 3 ///////////////////////////////////////////
 %-----------------------------------------------------------------------------------------------------
 % Extensao do predicado utentesPNome: Nome,Lis -> {V,F}
@@ -193,7 +194,7 @@ listarUtentesMaisFreqAux([],L,[]).
 listarUtentesMaisFreqAux([H|T],L,[(H,Q)|R]):-
 	quantosTem(H,L,Q),listarUtentesMaisFreqAux(T,L,R).
 
-% FEITO VITOR
+% FEITO VITOR E VERIFICADO
 % //////////////////////////////////////////////// Ponto 4 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado instituicoes: Resultado -> {V,F}
@@ -312,6 +313,7 @@ getAtosByUt(U,R) :-
     solucoes((D,U,S,C),
 	cuidado(D,U,S,C),R).
 
+% Feito - Marcos, VERIFICADO
 % //////////////////////////////////////////////// Ponto 8 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado getInstPrestByUtente: Id,Resultado -> {V,F}
@@ -344,41 +346,37 @@ getInstPrestByUtenteAux([IdPrestador | T], [(Instituicao, IdPrestador) | Resto])
 	prestador(IdPrestador, Nome, Especialidade, Instituicao),
 	getInstPrestByUtenteAux(T, Resto).
 
-% A fazer - Marcos
+% A fazer - Marcos (só falta a da especialidade)
 % //////////////////////////////////////////////// Ponto 9 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado getTotalByUtente: IdUtente, Total -> {V,F}
 
+% FEITO - Vitor
 getTotalByUtente(Id,T) :-
-	solucoes(C, cuidado(D, Id, S, C), TotUtente),
+	solucoes(C, cuidado(D, Id, P, S, C), TotUtente),
 	somatorio(TotUtente,T).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensao do predicado getTotalByServiço: IdServiço, Total -> {V,F}
+% Extensao do predicado getTotalByEspecialidade: Especialidade, Total -> {V,F}
 
-getTotalByServico(Id,T) :-
-	solucoes(C, cuidado(D, U, Id, C), TotServico),
-	somatorio(TotServico,T).
+% FALTA fazer
+
+% ----------------------------------------------------------------------------------------------------
+% Extensao do predicado getTotalByPrestador: Prestador, Total -> {V,F}
+
+% FEITO - Vitor
+getTotalByPrestador(P,T) :-
+	solucoes(C, cuidado(D, U, P, S, C), TotPrestador),
+	somatorio(TotPrestador,T).
 
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado getTotalByData: Data, Total -> {V,F}
 
+% FEITO - Vitor
 getTotalByData(D,T) :-
-	solucoes(C, cuidado(D, U, S, C), TotData),
+	solucoes(C, cuidado(D, U, P, S, C), TotData),
 	somatorio(TotData,T).
 
-% ----------------------------------------------------------------------------------------------------
-% Extensao do predicado getTotalByInstituicao: Instituicao, Total -> {V,F}
-
-getTotalByInstituicao(I,T) :-
-	solucoes(Id, prestador(Id, D, I, C), Servs),
-	getTotalListServs(Servs,T).
-getTotalListServs([],T) :-
-	T is 0.
-getTotalListServs([X|Y], T) :-
-	getTotalListServs(Y,Z),
-	getTotalByServico(X,R),
-	T is Z+R.
 
 % ////////////////////////////////////////// Funçőes auxiliares //////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
