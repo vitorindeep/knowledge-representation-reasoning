@@ -161,6 +161,13 @@ utentesPIdade(Idade, Lis) :-
 utentesPMorada(Morada,Lis) :-
 	solucoes((IdUt,Nome,Idade,Morada), utente(IdUt,Nome,Idade,Morada), Lis).
 
+% CAMPOS
+%-----------------------------------------------------------------------------------------------------
+% Extensao do predicado utentesPId: Idade,Lis -> {V,F}
+
+utentesPId(IdUt, Lis) :-
+	solucoes((IdUt,Nome,Idade,Morada), utente(IdUt,Nome,Idade,Morada), Lis).
+
 % DAQUI PARA BAIXO É O QUE ELES TINHAM A MAIS (N É PRECISO PARA O PT 3)
 %-----------------------------------------------------------------------------------------------------
 % Extensao do predicado utentesQGastaramMaisQX: Valor,Resultado -> {V,F}
@@ -233,85 +240,93 @@ cuidadosPDatas(Data,List) :-
 	solucoes((Dat,Ut,Prest,Desc,Cust), cuidado(Data,_,_,_,_), L),
 	removeDup(L,List).
 
-
-
-% //////////////////////////////////////////////// Ponto ? ///////////////////////////////////////////
+% CAMPOS
+% //////////////////////////////////////////////// Ponto 6 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
-% Extensao do predicado getUtBySer: D,R -> {V,F}
+% Extensao do predicado utentesDePrestador: IdPrest,Lis -> {V,F}
 
-getUtBySer(D,R) :-
-    solucoes(Ss,prestador(Ss,D,_,_),R1),
-    getUtBySerAux(R1,R2),
-    getUt(R2,R).
+utentesDePrestador(IdPrest,Lis):-
+	solucoes(IdPrest,prestador(IdPrest,Nome,Esp,Inst),Aux1),
+	utentesDePrestadorAux(Aux1,Aux2),
+	utentesPListaId(Aux2,Lis).
 
-% Extensao do predicado getUtBySerAux: Lista,Lista -> {V,F}
+utentesDePrestadorAux([],[]).
+utentesDePrestadorAux([H|T],Lis):-
+	solucoes(IdUt,cuidado(_,IdUt,H,_,_),Aux1),
+	utentesDePrestadorAux(T,Aux2),
+	concatena(Aux1,Aux2,Lis).
 
-getUtBySerAux([],[]).
-getUtBySerAux([IdPrest|Y],R) :-
-	solucoes(IdUt, cuidado(_,IdUt,IdPrest,_), R1),
- 	getUtBySerAux(Y,R2),
-	concatena(R1,R2,R).
-
-% ----------------------------------------------------------------------------------------------------
-% Extensao do predicado getUtByIns: I,R -> {V,F}
-
-getUtByIns(I,R) :-
-	solucoes(Ss ,prestador(Ss,_,I,_), R1),
-	getUtByInsAux(R1,R2),
-	getUt(R2,R).
-
-% Extensao do predicado getUtByInsAux: Lista,Lista -> {V,F}
-
-getUtByInsAux([],[]).
-getUtByInsAux([IdPrest|Y],R) :-
-	solucoes(IdUt, cuidado(_,IdUt,IdPrest,_), R1),
-	getUtByInsAux(Y,R2),
-	concatena(R1,R2,R).
-
-% Extensao do predicado getUtByInsAux: Lista,Lista -> {V,F}
-
-getUt([],[]).
-getUt([IdUt|Y],R) :-
-	solucoes((IdUt,Nome,Idade,Morada),utente(IdUt,Nome,Idade,Morada),R1),
- 	getUt(Y,R2),
-	concatena(R1,R2,R).
-
-% //////////////////////////////////////////////// Ponto ? ///////////////////////////////////////////
-% ----------------------------------------------------------------------------------------------------
-% Extensao do predicado getAtosBySer: S,R -> {V,F}
-
-getAtosBySer(S,R) :-
-	solucoes(Ss,prestador(Ss,S,_,_),R1),
-	getAtosBySerAux(R1,R).
-
-% Extensao do predicado getAtosBySerAux: L,L -> {V,F}
-getAtosBySerAux([],[]).
-getAtosBySerAux([IdPrest|Y],R) :-
-	solucoes((Data,IdUt,IdPrest,Custo),cuidado(Data,IdUt,IdPrest,Custo),R1),
- 	getAtosBySerAux(Y,R2),
-	concatena(R1,R2,R).
+utentesPListaId([],[]).
+utentesPListaId([H|T],Lis):-
+	utentesPId(H,Aux1),
+	utentesPListaId(T,Aux2),
+	concatena(Aux1,Aux2,Lis).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensao do predicado getAtosByIns: I,R -> {V,F}
+% Extensao do predicado utentesDeEspecialidade: Esp,Lis -> {V,F}
 
-getAtosByIns(I,R):-
-	solucoes(Ss,prestador(Ss,_,I,_),R1),
-	getAtosByInsAux(R1,R).
+utentesDeEspecialidade(Esp,Lis):-
+	solucoes(IdPrest,prestador(IdPrest,Nome,Esp,Inst),Aux1),
+	utentesDeEspecialidadeAux(Aux1,Aux2),
+	utentesPListaId(Aux2,Lis).
 
-% Extensao do predicado getAtosBySer: L,L -> {V,F}
+utentesDeEspecialidadeAux([],[]).
+utentesDeEspecialidadeAux([H|T],Lis):-
+	solucoes(IdUt,cuidado(_,IdUt,H,_,_),Aux1),
+	utentesDeEspecialidadeAux(T,Aux2),
+	concatena(Aux1,Aux2,Lis).
 
-getAtosByInsAux([],[]).
-getAtosByInsAux([IdPrest|Y],R):-
-	solucoes((Data,IdUt,IdPrest,Custo),cuidado(Data,IdUt,IdPrest,Custo),R1),
-	getAtosByInsAux(Y,R2),
-	concatena(R1,R2,R).
+utentesPListaId([],[]).
+utentesPListaId([H|T],Lis):-
+	utentesPId(H,Aux1),
+	utentesPListaId(T,Aux2),
+	concatena(Aux1,Aux2,Lis).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensao do predicado getAtosByUt: U,R -> {V,F}
+% Extensao do predicado utentesDeInstituicao: Inst,Lis -> {V,F}
 
-getAtosByUt(U,R) :-
-    solucoes((D,U,S,C),
-	cuidado(D,U,S,C),R).
+utentesDeInstituicao(Inst,Lis):-
+	solucoes(IdPrest,prestador(IdPrest,Nome,Esp,Inst),Aux1),
+	utentesDeInstituicaoAux(Aux1,Aux2),
+	utentesPListaId(Aux2,Lis).
+
+utentesDeInstituicaoAux([],[]).
+utentesDeInstituicaoAux([H|T],Lis):-
+	solucoes(IdUt,cuidado(_,IdUt,H,_,_),Aux1),
+	utentesDeInstituicaoAux(T,Aux2),
+	concatena(Aux1,Aux2,Lis).
+
+utentesPListaId([],[]).
+utentesPListaId([H|T],Lis):-
+	utentesPId(H,Aux1),
+	utentesPListaId(T,Aux2),
+	concatena(Aux1,Aux2,Lis).
+
+% //////////////////////////////////////////////// Ponto 7 ///////////////////////////////////////////
+% ----------------------------------------------------------------------------------------------------
+% Extensao do predicado cuidadosDeUtentes: IdUt,R -> {V,F}
+
+cuidadosDeUtentes(IdUt,R):-
+	solucoes((Data,IdUt,IdPrest,Desc,Custo),cuidado(Data,IdUt,IdPrest,Desc,Custo),R).
+
+% ----------------------------------------------------------------------------------------------------
+% Extensao do predicado cuidadosDeInstituicao: IdUt,R -> {V,F}
+
+cuidadosDeInstituicao(Inst,Lis):-
+	solucoes(IdPrest,prestador(IdPrest,Nome,Esp,Inst),Aux),
+	cuidadosDeInstituicaoAux(Aux,Lis).
+
+cuidadosDeInstituicaoAux([],[]).
+cuidadosDeInstituicaoAux([H|T],Lis):-
+	cuidadosDePrestador(H,Aux1),
+	cuidadosDeInstituicaoAux(T,Aux2),
+	concatena(Aux1,Aux2,Lis).
+
+% ----------------------------------------------------------------------------------------------------
+% Extensao do predicado cuidadosDePrestador: IdPrest,R -> {V,F}
+
+cuidadosDePrestador(IdPrest,R):-
+	solucoes((Data,IdUt,IdPrest,Desc,Custo),cuidado(Data,IdUt,IdPrest,Desc,Custo),R).
 
 % Feito - Marcos, VERIFICADO
 % //////////////////////////////////////////////// Ponto 8 ///////////////////////////////////////////
