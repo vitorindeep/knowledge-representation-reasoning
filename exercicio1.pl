@@ -65,11 +65,12 @@ cuidado(15-06-2017, 1, 1, terapiafala, 5).
 cuidado(18-06-2017, 2, 8, reumatomagrafia, 350).
 cuidado(18-06-2017, 2, 9, cbt, 10).
 
-% FEITO VITOR
+% FEITO VITOR E VERIFICADO
 % //////////////////////////////////////////////// Ponto 1 ///////////////////////////////////////////
 %-----------------------------------------------------------------------------------------------------
 % Invariante que năo permite a inserçăo de conhecimento de um utente com um id já existente
 % uso _ quando o dado năo é importante e năo quero saber dele
+
 +utente(Id, N, I, M) :: (solucoes(Id, utente(Id,_,_,_), S),
 						comprimento(S,L),
 						L==1).
@@ -92,7 +93,24 @@ cuidado(18-06-2017, 2, 9, cbt, 10).
 						comprimento(LisU, NumU),
 						NumU == 1).
 
-% FEITO VITOR
+% ----------------------------------------------------------------------------------------------------
+% Extensăo do predicado inserir: Termo -> {V,F}
+% mesmo que EVOLUCAO
+
+inserir(Termo) :-
+	solucoes(Invariante, +Termo::Invariante, Lista),
+	insercao(Termo),
+	teste(Lista).
+
+% ----------------------------------------------------------------------------------------------------
+% Extensăo do predicado remover: Termo -> {V,F}
+
+remover(Termo) :-
+	solucoes(Invariante, -Termo::Invariante, Lista),
+	teste(Lista),
+	remocao(Termo).
+
+% FEITO VITOR E VERIFICADO
 % //////////////////////////////////////////////// Ponto 2 ///////////////////////////////////////////
 %-----------------------------------------------------------------------------------------------------
 % Invariante que năo permite a remocao de conhecimento de um utente năo presente na base de conhecimento
@@ -123,7 +141,7 @@ cuidado(18-06-2017, 2, 9, cbt, 10).
 							comprimento(Cuids, L),
 							L == 1).
 
-% FEITO VITOR
+% FEITO VITOR E VERIFICADO
 % //////////////////////////////////////////////// Ponto 3 ///////////////////////////////////////////
 %-----------------------------------------------------------------------------------------------------
 % Extensao do predicado utentesPNome: Nome,Lis -> {V,F}
@@ -176,7 +194,7 @@ listarUtentesMaisFreqAux([],L,[]).
 listarUtentesMaisFreqAux([H|T],L,[(H,Q)|R]):-
 	quantosTem(H,L,Q),listarUtentesMaisFreqAux(T,L,R).
 
-% FEITO VITOR
+% FEITO VITOR E VERIFICADO
 % //////////////////////////////////////////////// Ponto 4 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado instituicoes: Resultado -> {V,F}
@@ -190,18 +208,32 @@ instituicoes(Resultado) :-
 % PONTO 6,7 -> carlos
 % PONTO 8,9 -> MARCOS
 
-% //////////////////////////////////////////////// Ponto ? ///////////////////////////////////////////
+% FEITO DIANA
+% //////////////////////////////////////////////// Ponto 5 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
-% Extensao do predicado getCuidadosbyInstituicao: I,R -> {V,F}
+% Extensao do predicado cuidadosPInstituicao: Inst,Result -> {V,F}
 
-getCuidadosbyInstituicao(I,S) :-
-	solucoes((Ss,Desc,I,Cid),prestador(Ss,Desc,I,Cid),S).
+cuidadosPInstituicao(Inst,List) :-
+	solucoes((Dat,Ut,Prest,Desc,Cust), prestador(_,_,_,Inst), L),
+	removeDup(L,List).
 
 
-% Extensao do predicado getCuidadosbyCidade: C,R -> {V,F}
+% ----------------------------------------------------------------------------------------------------
+% Extensao do predicado cuidadosPCidade: Cidade,Result -> {V,F}
 
-getCuidadosbyCidade(C,S) :-
-	solucoes((Ss,Desc,Ins,C),prestador(Ss,Desc,Ins,C),S).
+cuidadosPCidade(Cidade,List) :-
+	solucoes((Dat,Ut,Prest,Desc,Cust), utente(_,_,_,Cidade), L),
+	removeDup(L,List).
+
+
+% ----------------------------------------------------------------------------------------------------
+% Extensao do predicado cuidadosPDatas: Data,Result -> {V,F}
+
+cuidadosPDatas(Data,List) :-
+	solucoes((Dat,Ut,Prest,Desc,Cust), cuidado(Data,_,_,_,_), L),
+	removeDup(L,List).
+
+
 
 % //////////////////////////////////////////////// Ponto ? ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
@@ -281,6 +313,7 @@ getAtosByUt(U,R) :-
     solucoes((D,U,S,C),
 	cuidado(D,U,S,C),R).
 
+% Feito - Marcos, VERIFICADO
 % //////////////////////////////////////////////// Ponto 8 ///////////////////////////////////////////
 % Feito - Marcos
 %
@@ -356,28 +389,12 @@ getTotalByEspecialidade(Especialidade, T) :-
 
 % ////////////////////////////////////////// Funçőes auxiliares //////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado evoluacao: Termo -> {V,F}
-
-evoluacao(Termo) :-
-	solucoes(Invariante, +Termo::Invariante, Lista),
-	insercao(Termo),
-	teste(Lista).
-
-% ----------------------------------------------------------------------------------------------------
 % Extensăo do predicado insercao: Termo -> {V,F}
 
 insercao(T) :-
 	assert(T).
 insercao(T) :-
 	retract(T),!,fail.
-
-% ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado involucao: Termo -> {V,F}
-
-involucao(Termo) :-
-	solucoes(Invariante, -Termo::Invariante, Lista),
-	teste(Lista),
-	remocao(Termo).
 
 % ----------------------------------------------------------------------------------------------------
 % Extensăo do predicado remocao: Termo -> {V,F}
