@@ -250,13 +250,11 @@ cuidadosDePrestador(IdPrest,R):-
 
 % ----------------------------------------------------------------------------------------------------
 % ----------------------------------------------------------------------------------------------------
-%remover duplicados aqui , n sei se faz mt sentido
 % Extensao do predicado cuidadosPCidade: Cidade,Result -> {V,F}
 
 cuidadosPCidade(Cidade,List) :-
 	solucoes(U, utente(U,_,_,Cidade), Uts),
-	removeDup(Uts,ListUts),
-	getCuidadosPCidadeAux(ListUts,ListInsts),
+	getCuidadosPCidadeAux(Uts,ListInsts),
 	removeDup(ListInsts, List).
 
 % Extensao do predicado getCuidadosPCidadeAux: L,Resultado -> {V,F}
