@@ -239,7 +239,7 @@ cuidadosPInstituicaoAux([],[]).
 cuidadosPInstituicaoAux([H|T],List) :-
 	cuidadosDePrestador(H,Aux1),
 	cuidadosPInstituicaoAux(T,Aux2),
-	concatena(Aux1,Aux2,Lis).
+	concatena(Aux1,Aux2,List).
 
 
 % ----------------------------------------------------------------------------------------------------
