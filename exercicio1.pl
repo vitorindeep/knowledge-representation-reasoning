@@ -45,7 +45,7 @@ prestador(4, pres4, ginecologia, hospitalbraga).
 prestador(5, pres5, neurologia, hsmm).
 prestador(6, pres6, psiquiatria, hsog).
 prestador(7, pres7, oftamologia, htrofa).
-prestador(8, pres8, reumatologia, hospitalbraga).
+prestador(8, pres8, reumatologia, htrofa).
 prestador(9, pres9, psiquiatria, hospitalbraga).
 
 %-----------------------------------------------------------------------------------------------------
@@ -221,7 +221,7 @@ instituicoes(Resultado) :-
 % PONTO 6,7 -> carlos
 % PONTO 8,9 -> MARCOS
 
-% FEITO DIANA
+% FEITO DIANA - VERIFICADO VITOR
 % //////////////////////////////////////////////// Ponto 5 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Aqui n se remove duplicados no 1º predicado pq um prest pode dar + do q 1 cuidado diferente
@@ -276,7 +276,7 @@ cuidadosPDatas(Data,List) :-
 	solucoes((Data,Ut,Prest,Desc,Cust), cuidado(Data,Ut,Prest,Desc,Cust), List).
 
 
-% CAMPOS
+% FEITO CAMPOS - VERIFICADO VITOR
 % //////////////////////////////////////////////// Ponto 6 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado utentesDePrestador: IdPrest,Lis -> {V,F}
@@ -338,6 +338,7 @@ utentesPListaId([H|T],Lis):-
 	utentesPListaId(T,Aux2),
 	concatena(Aux1,Aux2,Lis).
 
+% VERIFICADO VITOR
 % //////////////////////////////////////////////// Ponto 7 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado cuidadosDeUtentes: IdUt,R -> {V,F}
@@ -366,8 +367,6 @@ cuidadosDePrestador(IdPrest,R):-
 
 % Feito - Marcos, VERIFICADO
 % //////////////////////////////////////////////// Ponto 8 ///////////////////////////////////////////
-% Feito - Marcos
-%
 % Enunciado: Determinar todas as instituições/prestadores a que um utente já recorreu;
 
 % ----------------------------------------------------------------------------------------------------
