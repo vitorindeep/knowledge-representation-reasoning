@@ -20,6 +20,7 @@
 :- dynamic utente/4.
 :- dynamic prestador/4.
 :- dynamic cuidado/5.
+:- dynamic recibo/9.
 
 %-----------------------------------------------------------------------------------------------------
 % Extensao do predicado utente: IdUt,Nome,Idade,Morada -> {V,F}
@@ -67,7 +68,10 @@ cuidado(18-06-2017, 2, 9, cbt, 10).
 
 
 %-----------------------------------------------------------------------------------------------------
-% Extensao do predicado recibo: IdUt, NomeUt, IdPrest, Especialidade, Data, Custo -> {V,F}
+% Extensao do predicado recibo: IdRecibo, IdUt, NomeUt, Morada, Especialidade, Instituicao, Data, Descricao, Custo -> {V,F}
+
+recibo(1, 3, marcos, anais, ginecologia, hospitalbraga, 13-02-2017, papanico, 30).
+recibo(2, 4, vitor, guimaraes, cardiologia, hospitalbraga, 20-03-2017, pacemaker, 20).
 
 
 
@@ -173,39 +177,6 @@ utentesPMorada(Morada,Lis) :-
 
 utentesPId(IdUt, Lis) :-
 	solucoes((IdUt,Nome,Idade,Morada), utente(IdUt,Nome,Idade,Morada), Lis).
-
-% DAQUI PARA BAIXO É O QUE ELES TINHAM A MAIS (N É PRECISO PARA O PT 3)
-%-----------------------------------------------------------------------------------------------------
-% Extensao do predicado utentesQGastaramMaisQX: Valor,Resultado -> {V,F}
-
-utentesQGastaramMaisQX(Valor,R1) :-
-	solucoes((IdUt,Custo),cuidado(Data,IdUt,IdPrest,Custo),Resultado),
-	utentesQGastaramMaisQXAux(Resultado,Valor,R),
-	removeDup(R,R1).
-
-% Extensao do predicado utentesQGastaramMaisQXAux: Lista,Valor,Resultado -> {V,F}
-
-utentesQGastaramMaisQXAux([],Valor,[]).
-utentesQGastaramMaisQXAux([(IdUt,Custo)|T],Valor,L):-
-	Custo=<Valor,utentesQGastaramMaisQXAux(T,Valor,L).
-utentesQGastaramMaisQXAux([(IdUt,Custo)|T],Valor,[IdUt|L]):-
-	Custo>Valor,utentesQGastaramMaisQXAux(T,Valor,L).
-
-%-----------------------------------------------------------------------------------------------------
-% Extensao do predicado ListarUtentesMaisFreq: Resultado -> {V,F}
-
-listarUtentesMaisFreq(Resultado) :-
-	solucoes(IdUt,utente(IdUt,Nome,Idade,Morada),R),
-	solucoes(IdUt,cuidado(Data,IdUt,IdPrest,Custo),R2),
-	listarUtentesMaisFreqAux(R,R2,R3),
-	ordenarDecresc(R3,Resultado).
-
-% Extensao do predicado listarUtentesMaisFreqAux: Utentes,Resultado -> {V,F}
-% Esta funcao pega em cada elemento da 1Ş lista e verifica quantas vezes aparece na segunda, no fim devolve um par com cada elemento e o nr de vezes q apareceu.
-
-listarUtentesMaisFreqAux([],L,[]).
-listarUtentesMaisFreqAux([H|T],L,[(H,Q)|R]):-
-	quantosTem(H,L,Q),listarUtentesMaisFreqAux(T,L,R).
 
 % FEITO VITOR E VERIFICADO
 % //////////////////////////////////////////////// Ponto 4 ///////////////////////////////////////////
@@ -434,6 +405,80 @@ getTotalByDatas([Data | L], T) :-
 getTotalByEspecialidade(Especialidade, T) :-
 	solucoes(IdPrest, prestador(IdPrest, _, Especialidade, _), Prestadores),
 	getTotalByPrestadores(Prestadores, T).
+
+% A FAZER - VITOR
+% ////////////////////////////////////////////// Ponto EXTRA /////////////////////////////////////////
+%-----------------------------------------------------------------------------------------------------
+
+%-----------------------------------------------------------------------------------------------------
+% Extensao do predicado recibo: IdRecibo, IdUt, NomeUt, Morada, Especialidade, Instituicao, Data, Descricao, Custo -> {V,F}
+
+
+%-----------------------------------------------------------------------------------------------------
+% Invariante que năo permite a inserçăo de conhecimento de um recibo com um id já existente
+% uso _ quando o dado năo é importante e năo quero saber dele
+
++recibo(Id, U, N, M, E, I, Dat, D, C) ::
+								(solucoes(Id, recibo(Id,_,_,_,_,_,_,_,_), R),
+								comprimento(R,Lr),
+								Lr==1,
+								solucoes((U,N,M), utente(U,N,_,M), Uts),
+								comprimento(Uts,Lu),
+								Lu==1,
+								solucoes((P,E,I), prestador(P,_,E,I), Pres),
+								comprimento(Pres, Lp),
+								Lp>=1,
+								solucoes((Dat,U,P,D,C), cuidado(Dat,U,P,D,C), Cuids),
+								comprimento(Cuids, Lc),
+								Lc==1).
+
+%-----------------------------------------------------------------------------------------------------
+% Invariante que não permite a remoção de qualquer recibo, uma vez que a informação
+% financeira nunca pode ser eliminada. Anti-fraude.
+
+-recibo(Id, U, N, M, E, I, Dat, D, C) :: fail.
+
+
+
+
+% DAQUI PARA BAIXO É O QUE ELES TINHAM A MAIS (N É PRECISO PARA O PT 3)
+%-----------------------------------------------------------------------------------------------------
+% Extensao do predicado utentesQGastaramMaisQX: Valor,Resultado -> {V,F}
+
+utentesQGastaramMaisQX(Valor,R1) :-
+	solucoes((IdUt,Custo),cuidado(Data,IdUt,IdPrest,Custo),Resultado),
+	utentesQGastaramMaisQXAux(Resultado,Valor,R),
+	removeDup(R,R1).
+
+% Extensao do predicado utentesQGastaramMaisQXAux: Lista,Valor,Resultado -> {V,F}
+
+utentesQGastaramMaisQXAux([],Valor,[]).
+utentesQGastaramMaisQXAux([(IdUt,Custo)|T],Valor,L):-
+	Custo=<Valor,utentesQGastaramMaisQXAux(T,Valor,L).
+utentesQGastaramMaisQXAux([(IdUt,Custo)|T],Valor,[IdUt|L]):-
+	Custo>Valor,utentesQGastaramMaisQXAux(T,Valor,L).
+
+%-----------------------------------------------------------------------------------------------------
+% Extensao do predicado ListarUtentesMaisFreq: Resultado -> {V,F}
+
+listarUtentesMaisFreq(Resultado) :-
+	solucoes(IdUt,utente(IdUt,Nome,Idade,Morada),R),
+	solucoes(IdUt,cuidado(Data,IdUt,IdPrest,Custo),R2),
+	listarUtentesMaisFreqAux(R,R2,R3),
+	ordenarDecresc(R3,Resultado).
+
+% Extensao do predicado listarUtentesMaisFreqAux: Utentes,Resultado -> {V,F}
+% Esta funcao pega em cada elemento da 1Ş lista e verifica quantas vezes aparece na segunda, no fim devolve um par com cada elemento e o nr de vezes q apareceu.
+
+listarUtentesMaisFreqAux([],L,[]).
+listarUtentesMaisFreqAux([H|T],L,[(H,Q)|R]):-
+	quantosTem(H,L,Q),listarUtentesMaisFreqAux(T,L,R).
+
+
+
+
+
+
 
 % ////////////////////////////////////////// Funçőes auxiliares //////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
