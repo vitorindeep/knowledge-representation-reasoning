@@ -65,6 +65,12 @@ cuidado(15-06-2017, 1, 1, terapiafala, 5).
 cuidado(18-06-2017, 2, 8, reumatomagrafia, 350).
 cuidado(18-06-2017, 2, 9, cbt, 10).
 
+
+%-----------------------------------------------------------------------------------------------------
+% Extensao do predicado recibo: IdUt, NomeUt, IdPrest, Especialidade, Data, Custo -> {V,F}
+
+
+
 % FEITO VITOR E VERIFICADO
 % //////////////////////////////////////////////// Ponto 1 ///////////////////////////////////////////
 %-----------------------------------------------------------------------------------------------------
@@ -218,27 +224,57 @@ instituicoes(Resultado) :-
 % FEITO DIANA
 % //////////////////////////////////////////////// Ponto 5 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
+% Aqui n se remove duplicados no 1º predicado pq um prest pode dar + do q 1 cuidado diferente
 % Extensao do predicado cuidadosPInstituicao: Inst,Result -> {V,F}
 
 cuidadosPInstituicao(Inst,List) :-
-	solucoes((Dat,Ut,Prest,Desc,Cust), prestador(_,_,_,Inst), L),
-	removeDup(L,List).
+	solucoes(IdPrest,prestador(IdPrest,Nome,Esp,Inst),L),
+	cuidadosPInstituicaoAux(L,List).
+
+
+%aqui tenho uma lista de id de prestadores de uma instit -> ver cuidados
+% Extensao do predicado cuidadosPInstituicaoAux: L,Result -> {V,F}
+
+cuidadosPInstituicaoAux([],[]).
+cuidadosPInstituicaoAux([H|T],List) :-
+	cuidadosDePrestador(H,Aux1),
+	cuidadosPInstituicaoAux(T,Aux2),
+	concatena(Aux1,Aux2,Lis).
 
 
 % ----------------------------------------------------------------------------------------------------
+% Extensao do predicado cuidadosDePrestador: IdPrest,R -> {V,F}
+
+cuidadosDePrestador(IdPrest,R):-
+	solucoes((Data,IdUt,IdPrest,Desc,Custo),cuidado(Data,IdUt,IdPrest,Desc,Custo),R).
+
+% ----------------------------------------------------------------------------------------------------
+% ----------------------------------------------------------------------------------------------------
+%remover duplicados aqui , n sei se faz mt sentido
 % Extensao do predicado cuidadosPCidade: Cidade,Result -> {V,F}
 
 cuidadosPCidade(Cidade,List) :-
-	solucoes((Dat,Ut,Prest,Desc,Cust), utente(_,_,_,Cidade), L),
-	removeDup(L,List).
+	solucoes(U, utente(U,_,_,Cidade), Uts),
+	removeDup(Uts,ListUts),
+	getCuidadosPCidadeAux(ListUts,ListInsts),
+	removeDup(ListInsts, List).
 
+% Extensao do predicado getCuidadosPCidadeAux: L,Resultado -> {V,F}
 
+% Recebe lista de IDs de utentes
+% Obtém lista de instituições desses utentes
+getCuidadosPCidadeAux([], []).
+getCuidadosPCidadeAux([IdUtente | T], [Instituicao | Resto]) :-
+	cuidado(_, IdUtente, _, Instituicao, _),
+	getCuidadosPCidadeAux(T, Resto).
+
+% ----------------------------------------------------------------------------------------------------
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado cuidadosPDatas: Data,Result -> {V,F}
 
 cuidadosPDatas(Data,List) :-
-	solucoes((Dat,Ut,Prest,Desc,Cust), cuidado(Data,_,_,_,_), L),
-	removeDup(L,List).
+	solucoes((Data,Ut,Prest,Desc,Cust), cuidado(Data,Ut,Prest,Desc,Cust), List).
+
 
 % CAMPOS
 % //////////////////////////////////////////////// Ponto 6 ///////////////////////////////////////////
