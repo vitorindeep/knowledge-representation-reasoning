@@ -406,7 +406,7 @@ getTotalByEspecialidade(Especialidade, T) :-
 	solucoes(IdPrest, prestador(IdPrest, _, Especialidade, _), Prestadores),
 	getTotalByPrestadores(Prestadores, T).
 
-% A FAZER - VITOR
+% FEITO E VERIFICADO VITOR
 % ////////////////////////////////////////////// Ponto EXTRA /////////////////////////////////////////
 %-----------------------------------------------------------------------------------------------------
 
@@ -440,13 +440,11 @@ getTotalByEspecialidade(Especialidade, T) :-
 
 
 
-
-% DAQUI PARA BAIXO É O QUE ELES TINHAM A MAIS (N É PRECISO PARA O PT 3)
 %-----------------------------------------------------------------------------------------------------
 % Extensao do predicado utentesQGastaramMaisQX: Valor,Resultado -> {V,F}
 
 utentesQGastaramMaisQX(Valor,R1) :-
-	solucoes((IdUt,Custo),cuidado(Data,IdUt,IdPrest,Custo),Resultado),
+	solucoes((U,C), recibo(_,U,_,_,_,_,_,_,C), Resultado),
 	utentesQGastaramMaisQXAux(Resultado,Valor,R),
 	removeDup(R,R1).
 
@@ -458,12 +456,13 @@ utentesQGastaramMaisQXAux([(IdUt,Custo)|T],Valor,L):-
 utentesQGastaramMaisQXAux([(IdUt,Custo)|T],Valor,[IdUt|L]):-
 	Custo>Valor,utentesQGastaramMaisQXAux(T,Valor,L).
 
+
 %-----------------------------------------------------------------------------------------------------
-% Extensao do predicado ListarUtentesMaisFreq: Resultado -> {V,F}
+% Extensao do predicado listarUtentesMaisFreq: Resultado -> {V,F}
 
 listarUtentesMaisFreq(Resultado) :-
-	solucoes(IdUt,utente(IdUt,Nome,Idade,Morada),R),
-	solucoes(IdUt,cuidado(Data,IdUt,IdPrest,Custo),R2),
+	solucoes(IdUt, utente(IdUt,_,_,_), R),
+	solucoes(IdUt, recibo(_,IdUt,_,_,_,_,_,_,_), R2),
 	listarUtentesMaisFreqAux(R,R2,R3),
 	ordenarDecresc(R3,Resultado).
 
@@ -475,9 +474,12 @@ listarUtentesMaisFreqAux([H|T],L,[(H,Q)|R]):-
 	quantosTem(H,L,Q),listarUtentesMaisFreqAux(T,L,R).
 
 
+%-----------------------------------------------------------------------------------------------------
+% Extensao do predicado gastoRegistadoPorUtente: Utente, Resultado -> {V,F}
 
-
-
+gastoRegistadoPorUtente(U,R) :-
+	solucoes(C, recibo(_,U,_,_,_,_,_,_,C), Custos),
+	somatorio(Custos, R).
 
 
 % ////////////////////////////////////////// Funçőes auxiliares //////////////////////////////////////
