@@ -212,13 +212,6 @@ cuidadosPInstituicaoAux([H|T],List) :-
 	cuidadosPInstituicaoAux(T,Aux2),
 	concatena(Aux1,Aux2,List).
 
-
-% ----------------------------------------------------------------------------------------------------
-% Extensao do predicado cuidadosDePrestador: IdPrest,R -> {V,F}
-
-cuidadosDePrestador(IdPrest,R):-
-	solucoes((Data,IdUt,IdPrest,Desc,Custo),cuidado(Data,IdUt,IdPrest,Desc,Custo),R).
-
 % ----------------------------------------------------------------------------------------------------
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado cuidadosPCidade: Cidade,Result -> {V,F}
