@@ -270,7 +270,7 @@ cuidadosDePrestador(IdPrest,R):-
 %   R: Lista de pares (Instituição, IdPrestador)
 %
 % Obtém IDs de prestadores que estão registados em cuidados do utente
-% Usa função auxiliar para obter (instituição, prestador) a partir de IDs de prestadores
+% Usa predicado adicional para obter (instituição, prestador) a partir de IDs de prestadores
 getInstPrestByUtente(IdUtente, R) :-
 	solucoes(IdPrestador, cuidado(_, IdUtente, IdPrestador, _, _), S),
 	removeDup(S, Resultado),
