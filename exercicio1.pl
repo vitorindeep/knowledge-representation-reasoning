@@ -272,40 +272,16 @@ utentesPListaId([H|T],Lis):-
 
 utentesDeEspecialidade(Esp,Lis):-
 	solucoes(IdPrest,prestador(IdPrest,Nome,Esp,Inst),Aux1),
-	utentesDeEspecialidadeAux(Aux1,Aux2),
+	utentesDePrestadorAux(Aux1,Aux2),
 	utentesPListaId(Aux2,Lis).
-
-utentesDeEspecialidadeAux([],[]).
-utentesDeEspecialidadeAux([H|T],Lis):-
-	solucoes(IdUt,cuidado(_,IdUt,H,_,_),Aux1),
-	utentesDeEspecialidadeAux(T,Aux2),
-	concatena(Aux1,Aux2,Lis).
-
-utentesPListaId([],[]).
-utentesPListaId([H|T],Lis):-
-	utentesPId(H,Aux1),
-	utentesPListaId(T,Aux2),
-	concatena(Aux1,Aux2,Lis).
 
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado utentesDeInstituicao: Inst,Lis -> {V,F}
 
 utentesDeInstituicao(Inst,Lis):-
 	solucoes(IdPrest,prestador(IdPrest,Nome,Esp,Inst),Aux1),
-	utentesDeInstituicaoAux(Aux1,Aux2),
+	utentesDePrestadorAux(Aux1,Aux2),
 	utentesPListaId(Aux2,Lis).
-
-utentesDeInstituicaoAux([],[]).
-utentesDeInstituicaoAux([H|T],Lis):-
-	solucoes(IdUt,cuidado(_,IdUt,H,_,_),Aux1),
-	utentesDeInstituicaoAux(T,Aux2),
-	concatena(Aux1,Aux2,Lis).
-
-utentesPListaId([],[]).
-utentesPListaId([H|T],Lis):-
-	utentesPId(H,Aux1),
-	utentesPListaId(T,Aux2),
-	concatena(Aux1,Aux2,Lis).
 
 % VERIFICADO VITOR
 % //////////////////////////////////////////////// Ponto 7 ///////////////////////////////////////////
