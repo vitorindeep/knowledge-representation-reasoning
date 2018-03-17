@@ -275,7 +275,7 @@ cuidadosDePrestador(IdPrest,R):-
 getInstPrestByUtente(IdUtente, R) :-
 	solucoes(IdPrestador, cuidado(_, IdUtente, IdPrestador, _, _), S),
 	removeDup(S, Resultado),
-	getInstPrestByUtenteAux(Resultado, R).
+	getInstPrestByPrestadores(Resultado, R).
 
 % Extensao do predicado getInstPrestByPrestadores: L,Resultado -> {V,F}
 %
