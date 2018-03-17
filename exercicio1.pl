@@ -209,7 +209,8 @@ utentesDePrestadorAux([],[]).
 utentesDePrestadorAux([H|T],Lis):-
 	solucoes(IdUt,cuidado(_,IdUt,H,_,_),Aux1),
 	utentesDePrestadorAux(T,Aux2),
-	concatena(Aux1,Aux2,Lis).
+	concatena(Aux1,Aux2,Aux3),
+	removeDup(Aux3,Lis).
 
 utentesPListaId([],[]).
 utentesPListaId([H|T],Lis):-
