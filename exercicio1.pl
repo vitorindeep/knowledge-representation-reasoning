@@ -1,6 +1,6 @@
 %-----------------------------------------------------------------------------------------------------
 % SIST. REPR. CONHECIMENTO E RACIOCINIO - MiEI/3
-% Trabalho prático nş1
+% Exercicio prático 1
 
 %-----------------------------------------------------------------------------------------------------
 % SICStus PROLOG: Declaracoes iniciais
@@ -8,7 +8,6 @@
 :- set_prolog_flag( discontiguous_warnings,off ).
 :- set_prolog_flag( single_var_warnings,off ).
 :- set_prolog_flag( unknown,fail ).
-
 
 %-----------------------------------------------------------------------------------------------------
 % SICStus PROLOG: definicoes iniciais
@@ -20,6 +19,7 @@
 :- dynamic utente/4.
 :- dynamic prestador/4.
 :- dynamic cuidado/5.
+:- dynamic recibo/9.
 
 %-----------------------------------------------------------------------------------------------------
 % Extensao do predicado utente: IdUt,Nome,Idade,Morada -> {V,F}
@@ -65,13 +65,6 @@ cuidado(15-06-2017, 1, 1, terapiafala, 5).
 cuidado(18-06-2017, 2, 8, reumatomagrafia, 350).
 cuidado(18-06-2017, 2, 9, cbt, 10).
 
-
-%-----------------------------------------------------------------------------------------------------
-% Extensao do predicado recibo: IdUt, NomeUt, IdPrest, Especialidade, Data, Custo -> {V,F}
-
-
-
-% FEITO VITOR E VERIFICADO
 % //////////////////////////////////////////////// Ponto 1 ///////////////////////////////////////////
 %-----------------------------------------------------------------------------------------------------
 % Invariante que năo permite a inserçăo de conhecimento de um utente com um id já existente
@@ -99,24 +92,6 @@ cuidado(18-06-2017, 2, 9, cbt, 10).
 						comprimento(LisU, NumU),
 						NumU == 1).
 
-% ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado inserir: Termo -> {V,F}
-% mesmo que EVOLUCAO
-
-inserir(Termo) :-
-	solucoes(Invariante, +Termo::Invariante, Lista),
-	insercao(Termo),
-	teste(Lista).
-
-% ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado remover: Termo -> {V,F}
-
-remover(Termo) :-
-	solucoes(Invariante, -Termo::Invariante, Lista),
-	teste(Lista),
-	remocao(Termo).
-
-% FEITO VITOR E VERIFICADO
 % //////////////////////////////////////////////// Ponto 2 ///////////////////////////////////////////
 %-----------------------------------------------------------------------------------------------------
 % Invariante que năo permite a remocao de conhecimento de um utente năo presente na base de conhecimento
@@ -147,7 +122,6 @@ remover(Termo) :-
 							comprimento(Cuids, L),
 							L == 1).
 
-% FEITO VITOR E VERIFICADO
 % //////////////////////////////////////////////// Ponto 3 ///////////////////////////////////////////
 %-----------------------------------------------------------------------------------------------------
 % Extensao do predicado utentesPNome: Nome,Lis -> {V,F}
@@ -167,47 +141,12 @@ utentesPIdade(Idade, Lis) :-
 utentesPMorada(Morada,Lis) :-
 	solucoes((IdUt,Nome,Idade,Morada), utente(IdUt,Nome,Idade,Morada), Lis).
 
-% CAMPOS
 %-----------------------------------------------------------------------------------------------------
 % Extensao do predicado utentesPId: Idade,Lis -> {V,F}
 
 utentesPId(IdUt, Lis) :-
 	solucoes((IdUt,Nome,Idade,Morada), utente(IdUt,Nome,Idade,Morada), Lis).
 
-% DAQUI PARA BAIXO É O QUE ELES TINHAM A MAIS (N É PRECISO PARA O PT 3)
-%-----------------------------------------------------------------------------------------------------
-% Extensao do predicado utentesQGastaramMaisQX: Valor,Resultado -> {V,F}
-
-utentesQGastaramMaisQX(Valor,R1) :-
-	solucoes((IdUt,Custo),cuidado(Data,IdUt,IdPrest,Custo),Resultado),
-	utentesQGastaramMaisQXAux(Resultado,Valor,R),
-	removeDup(R,R1).
-
-% Extensao do predicado utentesQGastaramMaisQXAux: Lista,Valor,Resultado -> {V,F}
-
-utentesQGastaramMaisQXAux([],Valor,[]).
-utentesQGastaramMaisQXAux([(IdUt,Custo)|T],Valor,L):-
-	Custo=<Valor,utentesQGastaramMaisQXAux(T,Valor,L).
-utentesQGastaramMaisQXAux([(IdUt,Custo)|T],Valor,[IdUt|L]):-
-	Custo>Valor,utentesQGastaramMaisQXAux(T,Valor,L).
-
-%-----------------------------------------------------------------------------------------------------
-% Extensao do predicado ListarUtentesMaisFreq: Resultado -> {V,F}
-
-listarUtentesMaisFreq(Resultado) :-
-	solucoes(IdUt,utente(IdUt,Nome,Idade,Morada),R),
-	solucoes(IdUt,cuidado(Data,IdUt,IdPrest,Custo),R2),
-	listarUtentesMaisFreqAux(R,R2,R3),
-	ordenarDecresc(R3,Resultado).
-
-% Extensao do predicado listarUtentesMaisFreqAux: Utentes,Resultado -> {V,F}
-% Esta funcao pega em cada elemento da 1Ş lista e verifica quantas vezes aparece na segunda, no fim devolve um par com cada elemento e o nr de vezes q apareceu.
-
-listarUtentesMaisFreqAux([],L,[]).
-listarUtentesMaisFreqAux([H|T],L,[(H,Q)|R]):-
-	quantosTem(H,L,Q),listarUtentesMaisFreqAux(T,L,R).
-
-% FEITO VITOR E VERIFICADO
 % //////////////////////////////////////////////// Ponto 4 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado instituicoes: Resultado -> {V,F}
@@ -216,12 +155,6 @@ instituicoes(Resultado) :-
 	solucoes(Instituicao, prestador(_,_,_,Instituicao), Insts),
 	removeDup(Insts,Resultado).
 
-% DAQUI PARA BAIXO NĂO MEXI, É TUDO DO HUGO
-% PONTO 5 -> diana
-% PONTO 6,7 -> carlos
-% PONTO 8,9 -> MARCOS
-
-% FEITO DIANA - VERIFICADO VITOR
 % //////////////////////////////////////////////// Ponto 5 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 
@@ -232,7 +165,7 @@ cuidadosPInstituicao(Inst,List) :-
 	solucoes(IdPrest,prestador(IdPrest,Nome,Esp,Inst),L),
 	cuidadosPInstituicaoAux(L,List).
 
-% ----------------------------------------------------------------------------------------------------
+
 % Extensao do predicado cuidadosPInstituicaoAux: L,Result -> {V,F}
 
 cuidadosPInstituicaoAux([],[]).
@@ -241,6 +174,7 @@ cuidadosPInstituicaoAux([H|T],List) :-
 	cuidadosPInstituicaoAux(T,Aux2),
 	concatena(Aux1,Aux2,List).
 
+
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado cuidadosDePrestador: IdPrest,R -> {V,F}
 
@@ -248,8 +182,6 @@ cuidadosDePrestador(IdPrest,R):-
 	solucoes((Data,IdUt,IdPrest,Desc,Custo),cuidado(Data,IdUt,IdPrest,Desc,Custo),R).
 
 
-
-% ----------------------------------------------------------------------------------------------------
 % ----------------------------------------------------------------------------------------------------
 
 % Extensao do predicado cuidadosPCidade: Cidade,Result -> {V,F}
@@ -259,16 +191,16 @@ cuidadosPCidade(Cidade,List) :-
 	getCuidadosPCidadeAux(Uts,ListCuid),
 	removeDup(ListCuid, List).
 
-% Extensao do predicado getCuidadosPCidadeAux: L,Resultado -> {V,F}
-
+% Extensao do predicado cuidadosPCidadeAux: L,Resultado -> {V,F}
 % Recebe lista de IDs de utentes
 % Obtém lista de instituições desses utentes
+
 getCuidadosPCidadeAux([], []).
 getCuidadosPCidadeAux([IdUtente | T], [Descricao | Resto]) :-
 	cuidado(_, IdUtente, _, Descricao, _),
 	getCuidadosPCidadeAux(T, Resto).
 
-% ----------------------------------------------------------------------------------------------------
+
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado cuidadosPDatas: Data,Result -> {V,F}
 
@@ -276,8 +208,6 @@ cuidadosPDatas(Data,List) :-
 	solucoes((Data,Ut,Prest,Desc,Cust), cuidado(Data,Ut,Prest,Desc,Cust), List).
 
 
-
-% FEITO CAMPOS - VERIFICADO VITOR
 % //////////////////////////////////////////////// Ponto 6 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado utentesDePrestador: IdPrest,Lis -> {V,F}
@@ -291,7 +221,8 @@ utentesDePrestadorAux([],[]).
 utentesDePrestadorAux([H|T],Lis):-
 	solucoes(IdUt,cuidado(_,IdUt,H,_,_),Aux1),
 	utentesDePrestadorAux(T,Aux2),
-	concatena(Aux1,Aux2,Lis).
+	concatena(Aux1,Aux2,Aux3),
+	removeDup(Aux3,Lis).
 
 utentesPListaId([],[]).
 utentesPListaId([H|T],Lis):-
@@ -304,42 +235,17 @@ utentesPListaId([H|T],Lis):-
 
 utentesDeEspecialidade(Esp,Lis):-
 	solucoes(IdPrest,prestador(IdPrest,Nome,Esp,Inst),Aux1),
-	utentesDeEspecialidadeAux(Aux1,Aux2),
+	utentesDePrestadorAux(Aux1,Aux2),
 	utentesPListaId(Aux2,Lis).
-
-utentesDeEspecialidadeAux([],[]).
-utentesDeEspecialidadeAux([H|T],Lis):-
-	solucoes(IdUt,cuidado(_,IdUt,H,_,_),Aux1),
-	utentesDeEspecialidadeAux(T,Aux2),
-	concatena(Aux1,Aux2,Lis).
-
-utentesPListaId([],[]).
-utentesPListaId([H|T],Lis):-
-	utentesPId(H,Aux1),
-	utentesPListaId(T,Aux2),
-	concatena(Aux1,Aux2,Lis).
 
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado utentesDeInstituicao: Inst,Lis -> {V,F}
 
 utentesDeInstituicao(Inst,Lis):-
 	solucoes(IdPrest,prestador(IdPrest,Nome,Esp,Inst),Aux1),
-	utentesDeInstituicaoAux(Aux1,Aux2),
+	utentesDePrestadorAux(Aux1,Aux2),
 	utentesPListaId(Aux2,Lis).
 
-utentesDeInstituicaoAux([],[]).
-utentesDeInstituicaoAux([H|T],Lis):-
-	solucoes(IdUt,cuidado(_,IdUt,H,_,_),Aux1),
-	utentesDeInstituicaoAux(T,Aux2),
-	concatena(Aux1,Aux2,Lis).
-
-utentesPListaId([],[]).
-utentesPListaId([H|T],Lis):-
-	utentesPId(H,Aux1),
-	utentesPListaId(T,Aux2),
-	concatena(Aux1,Aux2,Lis).
-
-% VERIFICADO VITOR
 % //////////////////////////////////////////////// Ponto 7 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado cuidadosDeUtentes: IdUt,R -> {V,F}
@@ -366,7 +272,6 @@ cuidadosDeInstituicaoAux([H|T],Lis):-
 cuidadosDePrestador(IdPrest,R):-
 	solucoes((Data,IdUt,IdPrest,Desc,Custo),cuidado(Data,IdUt,IdPrest,Desc,Custo),R).
 
-% Feito - Marcos, VERIFICADO
 % //////////////////////////////////////////////// Ponto 8 ///////////////////////////////////////////
 % Enunciado: Determinar todas as instituições/prestadores a que um utente já recorreu;
 
@@ -377,12 +282,12 @@ cuidadosDePrestador(IdPrest,R):-
 %   IdUtente: ID do utente
 %   R: Lista de pares (Instituição, IdPrestador)
 %
-% ObtémIDs de prestadores que estão registados em cuidados do utente
-% Usa função auxiliar para obter (instituição, prestador) a partir de IDs de prestadores
+% Obtém IDs de prestadores que estão registados em cuidados do utente
+% Usa predicado adicional para obter (instituição, prestador) a partir de IDs de prestadores
 getInstPrestByUtente(IdUtente, R) :-
 	solucoes(IdPrestador, cuidado(_, IdUtente, IdPrestador, _, _), S),
 	removeDup(S, Resultado),
-	getInstPrestByUtenteAux(Resultado, R).
+	getInstPrestByPrestadores(Resultado, R).
 
 % Extensao do predicado getInstPrestByPrestadores: L,Resultado -> {V,F}
 %
@@ -394,8 +299,6 @@ getInstPrestByPrestadores([IdPrestador | T], [(Instituicao, IdPrestador) | Resto
 	getInstPrestByPrestadores(T, Resto).
 
 % //////////////////////////////////////////////// Ponto 9 ///////////////////////////////////////////
-% Feito - Marcos
-%
 % Enunciado: Calcular o custo total dos cuidados de saúde por utente/especialidade/prestador/datas;
 
 % ----------------------------------------------------------------------------------------------------
@@ -438,7 +341,93 @@ getTotalByEspecialidade(Especialidade, T) :-
 	solucoes(IdPrest, prestador(IdPrest, _, Especialidade, _), Prestadores),
 	getTotalByPrestadores(Prestadores, T).
 
-% ////////////////////////////////////////// Funçőes auxiliares //////////////////////////////////////
+% ////////////////////////////////////////////// Ponto Extra /////////////////////////////////////////
+%-----------------------------------------------------------------------------------------------------
+% Extensao do predicado recibo: IdRecibo, IdUt, NomeUt, Morada, Especialidade, Instituicao, Data, Descricao, Custo -> {V,F}
+
+recibo(1, 3, marcos, anais, ginecologia, hospitalbraga, 13-02-2017, papanico, 30).
+recibo(2, 4, vitor, guimaraes, cardiologia, hospitalbraga, 20-03-2017, pacemaker, 20).
+
+%-----------------------------------------------------------------------------------------------------
+% Invariante que năo permite a inserçăo de conhecimento de um recibo com um id já existente
+% uso _ quando o dado năo é importante e năo quero saber dele
+
++recibo(Id, U, N, M, E, I, Dat, D, C) :: (solucoes(Id, recibo(Id,_,_,_,_,_,_,_,_), R),
+					comprimento(R,Lr),
+					Lr==1,
+					solucoes((U,N,M), utente(U,N,_,M), Uts),
+					comprimento(Uts,Lu),
+					Lu==1,
+					solucoes((P,E,I), prestador(P,_,E,I), Pres),
+					comprimento(Pres, Lp),
+					Lp>=1,
+					solucoes((Dat,U,P,D,C), cuidado(Dat,U,P,D,C), Cuids),
+					comprimento(Cuids, Lc),
+					Lc==1).
+
+%-----------------------------------------------------------------------------------------------------
+% Invariante que não permite a remoção de qualquer recibo, uma vez que a informação
+% financeira nunca pode ser eliminada. Anti-fraude.
+
+-recibo(Id, U, N, M, E, I, Dat, D, C) :: fail.
+
+%-----------------------------------------------------------------------------------------------------
+% Extensao do predicado utentesQGastaramMaisQX: Valor,Resultado -> {V,F}
+
+utentesQGastaramMaisQX(Valor,R1) :-
+	solucoes((U,C), recibo(_,U,_,_,_,_,_,_,C), Resultado),
+	utentesQGastaramMaisQXAux(Resultado,Valor,R),
+	removeDup(R,R1).
+
+% Extensao do predicado utentesQGastaramMaisQXAux: Lista,Valor,Resultado -> {V,F}
+
+utentesQGastaramMaisQXAux([],Valor,[]).
+utentesQGastaramMaisQXAux([(IdUt,Custo)|T],Valor,L):-
+	Custo=<Valor,utentesQGastaramMaisQXAux(T,Valor,L).
+utentesQGastaramMaisQXAux([(IdUt,Custo)|T],Valor,[IdUt|L]):-
+	Custo>Valor,utentesQGastaramMaisQXAux(T,Valor,L).
+
+%-----------------------------------------------------------------------------------------------------
+% Extensao do predicado listarUtentesMaisFreq: Resultado -> {V,F}
+
+listarUtentesMaisFreq(Resultado) :-
+	solucoes(IdUt, utente(IdUt,_,_,_), R),
+	solucoes(IdUt, recibo(_,IdUt,_,_,_,_,_,_,_), R2),
+	listarUtentesMaisFreqAux(R,R2,R3),
+	ordenarDecresc(R3,Resultado).
+
+% Extensao do predicado listarUtentesMaisFreqAux: Utentes,Resultado -> {V,F}
+% Esta funcao pega em cada elemento da 1Ş lista e verifica quantas vezes aparece na segunda, no fim devolve um par com cada elemento e o nr de vezes q apareceu.
+
+listarUtentesMaisFreqAux([],L,[]).
+listarUtentesMaisFreqAux([H|T],L,[(H,Q)|R]):-
+	quantosTem(H,L,Q),listarUtentesMaisFreqAux(T,L,R).
+
+%-----------------------------------------------------------------------------------------------------
+% Extensao do predicado gastoRegistadoPorUtente: Utente, Resultado -> {V,F}
+
+gastoRegistadoPorUtente(U,R) :-
+	solucoes(C, recibo(_,U,_,_,_,_,_,_,C), Custos),
+	somatorio(Custos, R).
+
+% ////////////////////////////////////////// Predicados Extra /////////////////////////////////////////
+% ----------------------------------------------------------------------------------------------------
+% Extensăo do predicado inserir: Termo -> {V,F}
+% mesmo que EVOLUCAO
+
+inserir(Termo) :-
+	solucoes(Invariante, +Termo::Invariante, Lista),
+	insercao(Termo),
+	teste(Lista).
+
+% ----------------------------------------------------------------------------------------------------
+% Extensăo do predicado remover: Termo -> {V,F}
+
+remover(Termo) :-
+	solucoes(Invariante, -Termo::Invariante, Lista),
+	teste(Lista),
+	remocao(Termo).
+
 % ----------------------------------------------------------------------------------------------------
 % Extensăo do predicado insercao: Termo -> {V,F}
 
