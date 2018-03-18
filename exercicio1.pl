@@ -224,15 +224,15 @@ instituicoes(Resultado) :-
 % FEITO DIANA - VERIFICADO VITOR
 % //////////////////////////////////////////////// Ponto 5 ///////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
-% Aqui n se remove duplicados no 1º predicado pq um prest pode dar + do q 1 cuidado diferente
+
+
 % Extensao do predicado cuidadosPInstituicao: Inst,Result -> {V,F}
 
 cuidadosPInstituicao(Inst,List) :-
 	solucoes(IdPrest,prestador(IdPrest,Nome,Esp,Inst),L),
 	cuidadosPInstituicaoAux(L,List).
 
-
-%aqui tenho uma lista de id de prestadores de uma instit -> ver cuidados
+% ----------------------------------------------------------------------------------------------------
 % Extensao do predicado cuidadosPInstituicaoAux: L,Result -> {V,F}
 
 cuidadosPInstituicaoAux([],[]).
@@ -241,29 +241,31 @@ cuidadosPInstituicaoAux([H|T],List) :-
 	cuidadosPInstituicaoAux(T,Aux2),
 	concatena(Aux1,Aux2,List).
 
-
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado cuidadosDePrestador: IdPrest,R -> {V,F}
 
 cuidadosDePrestador(IdPrest,R):-
 	solucoes((Data,IdUt,IdPrest,Desc,Custo),cuidado(Data,IdUt,IdPrest,Desc,Custo),R).
 
+
+
 % ----------------------------------------------------------------------------------------------------
 % ----------------------------------------------------------------------------------------------------
+
 % Extensao do predicado cuidadosPCidade: Cidade,Result -> {V,F}
 
 cuidadosPCidade(Cidade,List) :-
 	solucoes(U, utente(U,_,_,Cidade), Uts),
-	getCuidadosPCidadeAux(Uts,ListInsts),
-	removeDup(ListInsts, List).
+	getCuidadosPCidadeAux(Uts,ListCuid),
+	removeDup(ListCuid, List).
 
 % Extensao do predicado getCuidadosPCidadeAux: L,Resultado -> {V,F}
 
 % Recebe lista de IDs de utentes
 % Obtém lista de instituições desses utentes
 getCuidadosPCidadeAux([], []).
-getCuidadosPCidadeAux([IdUtente | T], [Instituicao | Resto]) :-
-	cuidado(_, IdUtente, _, Instituicao, _),
+getCuidadosPCidadeAux([IdUtente | T], [Descricao | Resto]) :-
+	cuidado(_, IdUtente, _, Descricao, _),
 	getCuidadosPCidadeAux(T, Resto).
 
 % ----------------------------------------------------------------------------------------------------
@@ -272,6 +274,7 @@ getCuidadosPCidadeAux([IdUtente | T], [Instituicao | Resto]) :-
 
 cuidadosPDatas(Data,List) :-
 	solucoes((Data,Ut,Prest,Desc,Cust), cuidado(Data,Ut,Prest,Desc,Cust), List).
+
 
 
 % FEITO CAMPOS - VERIFICADO VITOR
