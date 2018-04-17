@@ -157,6 +157,8 @@ recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i6) :-
 
 
 
+% ////////////////////////////// Conhecimento positivo e negativo //////////////////////////////////
+% //////////////////////////////////// ABORDAGEM ????? /////////////////////////////////////////////
 
 
 
@@ -165,31 +167,6 @@ recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i6) :-
 
 
 
-
-% ////////////////////////////// Exemplos conhec positivo e negativo //////////////////////////////////
-% Nao deixa inserir atos nos dias de feriado
-% Extensao do predicado feriado fNome -> {V,F}
-feriado(natal).
-feriado(pascoa).
-feriado(reveillon).
-feriado(25abril).
-
-%dynamic ato/4.
-
-+ato( A,B,C,D ) :: ( solucoes( D, feriado (D), S ),
-					 comprimento(S,L),
-				     L=0
-				    ). 
-
-
-% Impede remoção de profissionais com atos registados
-% Extensao do predicado profissional Pnome -> {V,F}
-
-
--profissional( N ) :: ( solucoes( N, ato(_,N,_,_), S  ),
-					 comprimento(S,L),
-					 L=0
-				   ).
 
 
 
