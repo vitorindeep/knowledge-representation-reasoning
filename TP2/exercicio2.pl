@@ -16,7 +16,6 @@
 
 % Para os invariantes:
 
-:- dynamic '-'/1.
 :- dynamic utente/4.
 :- dynamic prestador/4.
 :- dynamic cuidado/5.
@@ -46,6 +45,9 @@ filho( xpto732,julio ).
 excecao( filho(F,P) ) :-
 	filho( xpto732,P ).
 nulointerdito( xpto732 ).
+
+
+
 +filho( F,P ) :: (solucoes())
 
 %-----------------------------------------------------------------------------------------------------
@@ -53,7 +55,7 @@ nulointerdito( xpto732 ).
 %-----------------------------------------------------------------------------------------------------
 
 %-----------------------------------------------------------------------------------------------------
-% Extensao do predicado utente: IdUt,Nome,Idade,Morada -> {V,F,D}
+% Extensao do predicado utente: IdUt,Nome,Idade,Morada -> {V,F}
 utente(1, carlos, 21, famalicao).
 utente(2, diana, 20, trofa).
 utente(3, marcos, 20, anais).
@@ -66,7 +68,7 @@ utente(9, maria, 43, barcelos).
 utente(10, luis, 51, vizela).
 
 %-----------------------------------------------------------------------------------------------------
-% Extensao do predicado prestador: IdPrest,Nome,Especialidade,Instituicao -> {V,F,D}
+% Extensao do predicado prestador: IdPrest,Nome,Especialidade,Instituicao -> {V,F}
 prestador(1, pres1, pediatria, csjoane).
 prestador(2, pres2, cardiologia, hospitalbraga).
 prestador(3, pres3, cirurgia, hospitalbraga).
@@ -78,7 +80,7 @@ prestador(8, pres8, reumatologia, htrofa).
 prestador(9, pres9, psiquiatria, hospitalbraga).
 
 %-----------------------------------------------------------------------------------------------------
-% Extensao do predicado cuidado: Data,IdUt,IdPrest,Descricao,Custo -> {V,F,D}
+% Extensao do predicado cuidado: Data,IdUt,IdPrest,Descricao,Custo -> {V,F}
 cuidado(01-02-2017, 1, 6, hipnose, 15).
 cuidado(13-02-2017, 3, 4, papanico, 30).
 cuidado(13-02-2017, 2, 5, cerebrotroca, 30).
@@ -94,7 +96,7 @@ cuidado(18-06-2017, 2, 8, reumatomagrafia, 350).
 cuidado(18-06-2017, 2, 9, cbt, 10).
 
 %-----------------------------------------------------------------------------------------------------
-% Extensao do predicado recibo: IdRecibo, IdUt, NomeUt, Morada, Especialidade, Instituicao, Data, Descricao, Custo -> {V,F,D}
+% Extensao do predicado recibo: IdRecibo, IdUt, NomeUt, Morada, Especialidade, Instituicao, Data, Descricao, Custo -> {V,F}
 recibo(1, 3, marcos, anais, ginecologia, hospitalbraga, 13-02-2017, papanico, 30).
 recibo(2, 4, vitor, guimaraes, cardiologia, hospitalbraga, 20-03-2017, pacemaker, 20).
 
@@ -102,76 +104,55 @@ recibo(2, 4, vitor, guimaraes, cardiologia, hospitalbraga, 20-03-2017, pacemaker
 %-----------------------------------------------------------------------------------------------------
 % Representaçao de conhecimento negativo
 %-----------------------------------------------------------------------------------------------------
-utente: IdUt,Nome,Idade,Morada -> {V,F}
-prestador: IdPrest,Nome,Especialidade,Instituicao -> {V,F}
-cuidado: Data,IdUt,IdPrest,Descricao,Custo -> {V,F}
-recibo: IdRecibo, IdUt, NomeUt, Morada, Especialidade, Instituicao, Data, Descricao, Custo -> {V,F}
 
--utente(Id,N,I,M) :- 
-					nao(utente(Id,N,I,M)),
-					nao(excecao(utente(Id,N,I,M))).
-
--prestador(Id,N,E,I) :-
-					nao(prestador(Id,N,E,I)),
-					nao(excecao(prestador(Id,N,E,I))).
-
--cuidado(D,IdU,IdP,De,C) :-
-					nao(cuidado(D,IdU,IdP,De,C)),
-					nao(excecao(cuidado(D,IdU,IdP,De,C))).
-
--recibo(IdR, IdU, N, M, E, I, D, De, C) :-
-					nao(recibo(IdR, IdU, N, M, E, I, D, De, C)),
-					nao(excecao(recibo(IdR, IdU, N, M, E, I, D, De, C))).
 
 
 %-----------------------------------------------------------------------------------------------------
 % Representar casos de conhecimento imperfeito incerto
 %-----------------------------------------------------------------------------------------------------
 
-% Desconhece-se a morada do utente com o id=12, correspondente à Mariana de 43 anos. 
+% Nulo incerto morada
 utente(12, mariana, 43, i1).
 excecao( utente( A, B, C, D ) ) :-
 	utente( A, B, C, i1).
 
-
-% Não se sabe qual é o nome do prestador com o id=11 do hospital de braga, nem qual a especialidade que o mesmo exerce. 
+% Nulo incerto nome e especialidade
 prestador(11, i2, i3, hospitalbraga).
 excecao( prestador( A, B, C, D ) ) :-
 	prestador( A, i2, C, D).
 excecao( prestador( A, B, C, D ) ) :-
 	prestador( A, B, i3, D).
 
-% Existe um recibo (idRecibo=5) do utente com id=10, intitulado luis, que vive em vizela e efetuou, no hospital de braga, hipnose na área da psiquiatria, na data 02-11-2017. Desconhece-se o custo declarado no recibo, no entanto sabe-se que se situa entre 35€ e 60€.
-recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i4).
+%Nulo incerto (intervalo) custo > 35 e custo < 60
+recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i6).
 excecao( recibo(A, B, C, D, E, F, G, H, I) ) :-
-				recibo(A, B, C, D, E, F, G, H, i4).
-recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i4) :-
-				i4 > 35, i4 < 60.
+				recibo(A, B, C, D, E, F, G, H, i6).
+recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i6) :-
+				i6 > 35, i6 < 60.
 
 %-----------------------------------------------------------------------------------------------------
 % Representar casos de conhecimento imperfeito impreciso
 %-----------------------------------------------------------------------------------------------------
 
-% Não se sabe se a utente com id=11, com o nome Inês, residente em Lisboa, tem 23 ou 24 anos.
+% Nulo impreciso 23 ou 24 anos
 excecao( utente(11,ines,23,lisboa) ).
 excecao( utente(11,ines,24,lisboa) ).
 
-% Desconhece-se se o prestador com id=10, pres10, exerce dermatologia no Hospital de Braga ou no Hospital de São João.
+% Nulo impreciso hospital de braga ou de são joão
 excecao( prestador(10, pres10, dermatologia, hospitalbraga) ).
 excecao( prestador(10, pres10, dermatologia, hsaojoao) ).
 
-
-%Não se sabe se o cuidado "penso" prestado em 19-12-2017, pelo prestador com id=8 e com o valor monetário de 10€ corresponde ao utende com id=2 ou id=3.
+% Nulo impreciso ao utente 2 ou 3
 excecao( cuidado(19-12-2017, 2, 8, penso, 10) ).
 excecao( cuidado(19-12-2017, 3, 8, penso, 10) ).
 
-% Desconhece-se se o cuidado prestado em 12-05-2017 pelo prestador com id=5 ao utente com id=8 foi quimioterapia ou radioterapia, e se o custo foi 50€ ou 70€.
+% Nulo impreciso quimioterapia ou radioterapia, custo=50 ou custo=70
 excecao( cuidado(12-05-2017, 8, 5, radioterapia, 50) ).
 excecao( cuidado(12-05-2017, 8, 5, radioterapia, 70) ).
 excecao( cuidado(12-05-2017, 8, 5, quimioterapia, 50) ).
 excecao( cuidado(12-05-2017, 8, 5, quimioterapia, 70) ).
 
-% Existe um recibo (idRecibo=3) do utente com id=2, intitulado Diana, que vive na Trofa e efetuou, no hospital da trofa, uma consulta de rotina na área da nutrição, com custo de 50€. Desconhece-se, no entanto, se o recibo foi emitido em 27-03-2017 ou 28-03-2017.
+% Nulo impreciso recibo 27-03-2017 ou 28-03-2017
 excecao( recibo(3, 2, diana, trofa, nutricao, htrofa, 27-03-2017, rotina, 50) ).
 excecao( recibo(3, 2, diana, trofa, nutricao, htrofa, 28-03-2017, rotina, 50) ).
 
@@ -179,31 +160,22 @@ excecao( recibo(3, 2, diana, trofa, nutricao, htrofa, 28-03-2017, rotina, 50) ).
 % Representar casos de conhecimento imperfeito interdito
 %-----------------------------------------------------------------------------------------------------
 
-% Não se pode saber qual a descrição do cuidado realizado a 13-08-2017, prestado pelo prestador com id=7 ao utente com id=10, sendo que o custo foi de 75€.
-cuidado( 13-08-2017, 10, 7, i5, 45).
-excecao( cuidado(A, B, C, D, E) ) :-
-	cuidado(A, B, C, i5, E).
+% Nulo interdito descricao
+cuidado( 13-08-2017, 10, 7, i4, 45).
+excecao( cuidado(A, B, C, D, E) ) :-s
+	cuidado(A, B, C, i4, E).
+nulointerdito( i4 ).
+
+% Nulo interdito instituicao
+recibo( 4, 7, marta, guimaraes, dermatologia, i5, 04-12-2017, peelingquimico, 30 ).
+excecao( recibo(A, B, C, D, E, F, G, H, I) ) :-
+	recibo(A, B, C, D, E, i5, G, H, I).
 nulointerdito( i5 ).
-+cuidado( A, B, C, D, E ) :: ( solucoes((A,B,C,E), (cuidado( 13-08-2017, 10, 7, i5, 45), nao(nulo(i5)))), List ),
-                 		  	   comprimento( List, N ),
-                 		  	   N == 0
-                 		  	 ).
 
 %-----------------------------------------------------------------------------------------------------
 % Manipular invariantes que designem restrições à inserção e à remoção de conhecimento do sistema
 %-----------------------------------------------------------------------------------------------------
 
-<<<<<<< HEAD
-% Nunca se poderá saber, a partir do recibo com id=4, em que instituição foi prestado um peeling químico, na área da dermatologia, ao utente com id=7 e intitulado Marta, em 04-12-2017, com o custo de 30€
-recibo( 4, 7, marta, guimaraes, dermatologia, i6, 04-12-2017, peelingquimico, 30 ).
-excecao( recibo(A, B, C, D, E, F, G, H, I) ) :-
-	recibo(A, B, C, D, E, i6, G, H, I).
-nulointerdito( i6 ).
-+recibo(A, B, C, D, E, F, G, H, I) :: ( solucoes((A, B, C, D, E, G, H, I), (recibo( 4, 7, marta, guimaraes, dermatologia, i6, 04-12-2017, peelingquimico, 30), nao(nulo(i6)))), List ),
-                 		  	   			comprimento( List, N ),
-                 		  	  		 	N == 0
-                 		  	   			).
-=======
 %-----------------------------------------------------------------------------------------------------
 % Invariante que năo permite a inserçăo de conhecimento de um utente com um id já existente
 % uso _ quando o dado năo é importante e năo quero saber dele
@@ -271,7 +243,6 @@ nulointerdito( i6 ).
 
 %-----------------------------------------------------------------------------------------------------
 % Invariante que năo permite a remocao de conhecimento de um cuidado năo presente na base de conhecimento
->>>>>>> 08ef4fe19415b9d764751599d7138768e9c53ab6
 
 -cuidado(Dat, U, P, D, C) :: (solucoes((Dat,U,P,D,C), cuidado(Dat,U,P,D,C), Cuids),
 							comprimento(Cuids, L),
@@ -285,7 +256,7 @@ nulointerdito( i6 ).
 
 % ////////////////////////////////////////// Predicados Extra /////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado inserir: Termo -> {V,F,D}
+% Extensăo do predicado inserir: Termo -> {V,F}
 % mesmo que EVOLUCAO
 
 inserir(Termo) :-
@@ -294,7 +265,7 @@ inserir(Termo) :-
 	teste(Lista).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado remover: Termo -> {V,F,D}
+% Extensăo do predicado remover: Termo -> {V,F}
 
 remover(Termo) :-
 	solucoes(Invariante, -Termo::Invariante, Lista),
@@ -302,7 +273,7 @@ remover(Termo) :-
 	remocao(Termo).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado insercao: Termo -> {V,F,D}
+% Extensăo do predicado insercao: Termo -> {V,F}
 
 insercao(T) :-
 	assert(T).
@@ -310,7 +281,7 @@ insercao(T) :-
 	retract(T),!,fail.
 
 % ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado remocao: Termo -> {V,F,D}
+% Extensăo do predicado remocao: Termo -> {V,F}
 
 remocao(T) :-
 	retract(T).
@@ -318,7 +289,7 @@ remocao(T) :-
 	assert(T),!,fail.
 
 % ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado teste: Lista -> {V,F,D}
+% Extensăo do predicado teste: Lista -> {V,F}
 
 teste([]).
 teste([I|L]) :-
@@ -326,41 +297,33 @@ teste([I|L]) :-
 	teste(L).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado solucoes: X,Y,Z -> {V,F,D}
+% Extensăo do predicado solucoes: X,Y,Z -> {V,F}
 
 solucoes(X,Y,Z) :-
 	findall(X,Y,Z).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado comprimento: Lista, Resultado -> {V,F,D}
+% Extensăo do predicado comprimento: Lista, Resultado -> {V,F}
 
 comprimento(X,Z):-
 	length(X,Z).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensao do predicado somatorio: lista, resultado -> {V,F,D}
+% Extensao do predicado somatorio: lista, resultado -> {V,F}
 
 somatorio([], 0).
 somatorio([X|Y], R) :-
 	somatorio(Y,G),
 	R is X+G.
 
-<<<<<<< HEAD
-% Extensao do predicado nao: Q -> {V,F,D}
-=======
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado nao: Q -> {V,F}
->>>>>>> de0d31adcc95db0cccdde0a44b02077354dc9d75
 
 nao(Q):- Q, !, fail.
 nao(Q).
 
-<<<<<<< HEAD
-% Extensao do predicado quantosTem:A,Lista,Resultado  -> {V,F,D}
-=======
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado quantosTem:A,Lista,Resultado  -> {V,F}
->>>>>>> de0d31adcc95db0cccdde0a44b02077354dc9d75
 
 quantosTem(A,[],0).
 quantosTem(A,[H|T],Resultado):-
@@ -368,12 +331,8 @@ quantosTem(A,[H|T],Resultado):-
 quantosTem(A,[H|T],Resultado):-
 	(A \= H), quantosTem(A,T,Resultado).
 
-<<<<<<< HEAD
-% Extensao do predicado pertence: X,L -> {V,F,D}
-=======
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado pertence: X,L -> {V,F}
->>>>>>> de0d31adcc95db0cccdde0a44b02077354dc9d75
 
 pertence(X,[]):- fail.
 pertence(X,[X|T]):- X==X.
@@ -381,12 +340,8 @@ pertence(X,[H|T]):-
 	X\=H,
 	pertence(X,T).
 
-<<<<<<< HEAD
-% Extensao do predicado removeDup: L,R -> {V,F,D}
-=======
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado removeDup: L,R -> {V,F}
->>>>>>> de0d31adcc95db0cccdde0a44b02077354dc9d75
 
 removeDup([],[]).
 removeDup([X|T],R):-
@@ -396,24 +351,16 @@ removeDup([X|T],[X|R]):-
 	nao(pertence(X,T)),
 	removeDup(T,R).
 
-<<<<<<< HEAD
-% Extensao do predicado ordenarDecresc: L,Resultado -> {V,F,D}
-=======
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado ordenarDecresc: L,Resultado -> {V,F}
->>>>>>> de0d31adcc95db0cccdde0a44b02077354dc9d75
 
 ordenarDecresc([X],[X]).
 ordenarDecresc([X|Y],T):-
 	ordenarDecresc(Y,R),
 	insereOrdenado(X,R,T).
 
-<<<<<<< HEAD
-% Extensao do predicado insereOrdenado: X,L,Resultado  -> {V,F,D}
-=======
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado insereOrdenado: X,L,Resultado  -> {V,F}
->>>>>>> de0d31adcc95db0cccdde0a44b02077354dc9d75
 
 insereOrdenado((X1,Y1),[],[(X1,Y1)]).
 insereOrdenado((X1,Y1),[(X2,Y2)|Z],[(X1,Y1)|[(X2,Y2)|Z]]):-
@@ -422,12 +369,8 @@ insereOrdenado((X1,Y1), [(X2,Y2)|Z], [(X2,Y2)|R2]) :-
 	Y1=<Y2,
 	insereOrdenado((X1,Y1),Z,R2).
 
-<<<<<<< HEAD
-% Extensao do predicado concatena(L1,L2,L3)->{V,F,D}
-=======
 % ----------------------------------------------------------------------------------------------------
 % Extensao do predicado concatena(L1,L2,L3)->{V,F}
->>>>>>> de0d31adcc95db0cccdde0a44b02077354dc9d75
 
 concatena([],L2,L2).
 concatena([X|L1],L2,[X|L]) :-
