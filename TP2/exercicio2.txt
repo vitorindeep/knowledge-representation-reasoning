@@ -50,11 +50,12 @@ nulointerdito( xpto732 ).
 
 +filho( F,P ) :: (solucoes())
 
-
+%-----------------------------------------------------------------------------------------------------
+% Representaçao de conhecimento positivo
+%-----------------------------------------------------------------------------------------------------
 
 %-----------------------------------------------------------------------------------------------------
 % Extensao do predicado utente: IdUt,Nome,Idade,Morada -> {V,F}
-
 utente(1, carlos, 21, famalicao).
 utente(2, diana, 20, trofa).
 utente(3, marcos, 20, anais).
@@ -66,18 +67,8 @@ utente(8, paulo, 16, barcelos).
 utente(9, maria, 43, barcelos).
 utente(10, luis, 51, vizela).
 
-% Nulo impreciso 23 ou 24 anos
-excecao( utente(11,ines,23,lisboa) ).
-excecao( utente(11,ines,24,lisboa) ).
-
-% Nulo incerto morada
-utente(12, mariana, 43, i1).
-excecao( utente( A, B, C, D ) ) :-
-	utente( A, B, C, i1).
-
 %-----------------------------------------------------------------------------------------------------
 % Extensao do predicado prestador: IdPrest,Nome,Especialidade,Instituicao -> {V,F}
-
 prestador(1, pres1, pediatria, csjoane).
 prestador(2, pres2, cardiologia, hospitalbraga).
 prestador(3, pres3, cirurgia, hospitalbraga).
@@ -88,20 +79,8 @@ prestador(7, pres7, oftamologia, htrofa).
 prestador(8, pres8, reumatologia, htrofa).
 prestador(9, pres9, psiquiatria, hospitalbraga).
 
-% Nulo impreciso hospital de braga ou de são joão
-excecao( prestador(10, pres10, dermatologia, hospitalbraga) ).
-excecao( prestador(10, pres10, dermatologia, hsaojoao) ).
-
-% Nulo incerto nome e especialidade
-prestador(11, i2, i3, hospitalbraga).
-excecao( prestador( A, B, C, D ) ) :-
-	prestador( A, i2, C, D).
-excecao( prestador( A, B, C, D ) ) :-
-	prestador( A, B, i3, D).
-
 %-----------------------------------------------------------------------------------------------------
 % Extensao do predicado cuidado: Data,IdUt,IdPrest,Descricao,Custo -> {V,F}
-
 cuidado(01-02-2017, 1, 6, hipnose, 15).
 cuidado(13-02-2017, 3, 4, papanico, 30).
 cuidado(13-02-2017, 2, 5, cerebrotroca, 30).
@@ -116,6 +95,53 @@ cuidado(15-06-2017, 1, 1, terapiafala, 5).
 cuidado(18-06-2017, 2, 8, reumatomagrafia, 350).
 cuidado(18-06-2017, 2, 9, cbt, 10).
 
+%-----------------------------------------------------------------------------------------------------
+% Extensao do predicado recibo: IdRecibo, IdUt, NomeUt, Morada, Especialidade, Instituicao, Data, Descricao, Custo -> {V,F}
+recibo(1, 3, marcos, anais, ginecologia, hospitalbraga, 13-02-2017, papanico, 30).
+recibo(2, 4, vitor, guimaraes, cardiologia, hospitalbraga, 20-03-2017, pacemaker, 20).
+
+
+%-----------------------------------------------------------------------------------------------------
+% Representaçao de conhecimento negativo
+%-----------------------------------------------------------------------------------------------------
+
+
+
+%-----------------------------------------------------------------------------------------------------
+% Representar casos de conhecimento imperfeito incerto
+%-----------------------------------------------------------------------------------------------------
+
+% Nulo incerto morada
+utente(12, mariana, 43, i1).
+excecao( utente( A, B, C, D ) ) :-
+	utente( A, B, C, i1).
+
+% Nulo incerto nome e especialidade
+prestador(11, i2, i3, hospitalbraga).
+excecao( prestador( A, B, C, D ) ) :-
+	prestador( A, i2, C, D).
+excecao( prestador( A, B, C, D ) ) :-
+	prestador( A, B, i3, D).
+
+%Nulo incerto (intervalo) custo > 35 e custo < 60
+recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i6).
+excecao( recibo(A, B, C, D, E, F, G, H, I) ) :-
+				recibo(A, B, C, D, E, F, G, H, i6).
+recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i6) :-
+				i6 > 35, i6 < 60.
+
+%-----------------------------------------------------------------------------------------------------
+% Representar casos de conhecimento imperfeito impreciso
+%-----------------------------------------------------------------------------------------------------
+
+% Nulo impreciso 23 ou 24 anos
+excecao( utente(11,ines,23,lisboa) ).
+excecao( utente(11,ines,24,lisboa) ).
+
+% Nulo impreciso hospital de braga ou de são joão
+excecao( prestador(10, pres10, dermatologia, hospitalbraga) ).
+excecao( prestador(10, pres10, dermatologia, hsaojoao) ).
+
 % Nulo impreciso ao utente 2 ou 3
 excecao( cuidado(19-12-2017, 2, 8, penso, 10) ).
 excecao( cuidado(19-12-2017, 3, 8, penso, 10) ).
@@ -126,21 +152,19 @@ excecao( cuidado(12-05-2017, 8, 5, radioterapia, 70) ).
 excecao( cuidado(12-05-2017, 8, 5, quimioterapia, 50) ).
 excecao( cuidado(12-05-2017, 8, 5, quimioterapia, 70) ).
 
+% Nulo impreciso recibo 27-03-2017 ou 28-03-2017
+excecao( recibo(3, 2, diana, trofa, nutricao, htrofa, 27-03-2017, rotina, 50) ).
+excecao( recibo(3, 2, diana, trofa, nutricao, htrofa, 28-03-2017, rotina, 50) ).
+
+%-----------------------------------------------------------------------------------------------------
+% Representar casos de conhecimento imperfeito interdito
+%-----------------------------------------------------------------------------------------------------
+
 % Nulo interdito descricao
 cuidado( 13-08-2017, 10, 7, i4, 45).
 excecao( cuidado(A, B, C, D, E) ) :-s
 	cuidado(A, B, C, i4, E).
 nulointerdito( i4 ).
-
-%-----------------------------------------------------------------------------------------------------
-% Extensao do predicado recibo: IdRecibo, IdUt, NomeUt, Morada, Especialidade, Instituicao, Data, Descricao, Custo -> {V,F}
-
-recibo(1, 3, marcos, anais, ginecologia, hospitalbraga, 13-02-2017, papanico, 30).
-recibo(2, 4, vitor, guimaraes, cardiologia, hospitalbraga, 20-03-2017, pacemaker, 20).
-
-% Nulo impreciso recibo 27-03-2017 ou 28-03-2017
-excecao( recibo(3, 2, diana, trofa, nutricao, htrofa, 27-03-2017, rotina, 50) ).
-excecao( recibo(3, 2, diana, trofa, nutricao, htrofa, 28-03-2017, rotina, 50) ).
 
 % Nulo interdito instituicao
 recibo( 4, 7, marta, guimaraes, dermatologia, i5, 04-12-2017, peelingquimico, 30 ).
@@ -148,12 +172,7 @@ excecao( recibo(A, B, C, D, E, F, G, H, I) ) :-
 	recibo(A, B, C, D, E, i5, G, H, I).
 nulointerdito( i5 ).
 
-%Nulo incerto (intervalo) custo > 35 e custo < 60
-recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i6).
-excecao( recibo(A, B, C, D, E, F, G, H, I) ) :-
-				recibo(A, B, C, D, E, F, G, H, i6).
-recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i6) :-
-				i6 > 35, i6 < 60.
+
 
 
 
