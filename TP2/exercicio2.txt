@@ -128,7 +128,7 @@ excecao( cuidado(12-05-2017, 8, 5, quimioterapia, 70) ).
 
 % Nulo interdito descricao
 cuidado( 13-08-2017, 10, 7, i4, 45).
-excecao( cuidado(A, B, C, D, E) ) :-
+excecao( cuidado(A, B, C, D, E) ) :-s
 	cuidado(A, B, C, i4, E).
 nulointerdito( i4 ).
 
@@ -148,22 +148,12 @@ excecao( recibo(A, B, C, D, E, F, G, H, I) ) :-
 	recibo(A, B, C, D, E, i5, G, H, I).
 nulointerdito( i5 ).
 
-
-
-
-
-
-
-
-
-
-TODO: - pôr nulo incerto custo > tal e custo < tal
-	  - ver ultima fiha de prolog para representar conhecimento positivo e negativo
-
-
-
-
-
+%Nulo incerto (intervalo) custo > 35 e custo < 60
+recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i6).
+excecao( recibo(A, B, C, D, E, F, G, H, I) ) :-
+				recibo(A, B, C, D, E, F, G, H, i6).
+recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i6) :-
+				i6 > 35, i6 < 60.
 
 
 
@@ -176,8 +166,30 @@ TODO: - pôr nulo incerto custo > tal e custo < tal
 
 
 
+% ////////////////////////////// Exemplos conhec positivo e negativo //////////////////////////////////
+% Nao deixa inserir atos nos dias de feriado
+% Extensao do predicado feriado fNome -> {V,F}
+feriado(natal).
+feriado(pascoa).
+feriado(reveillon).
+feriado(25abril).
+
+%dynamic ato/4.
+
++ato( A,B,C,D ) :: ( solucoes( D, feriado (D), S ),
+					 comprimento(S,L),
+				     L=0
+				    ). 
 
 
+% Impede remoção de profissionais com atos registados
+% Extensao do predicado profissional Pnome -> {V,F}
+
+
+-profissional( N ) :: ( solucoes( N, ato(_,N,_,_), S  ),
+					 comprimento(S,L),
+					 L=0
+				   ).
 
 
 
