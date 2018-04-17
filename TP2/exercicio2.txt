@@ -55,7 +55,7 @@ nulointerdito( xpto732 ).
 %-----------------------------------------------------------------------------------------------------
 
 %-----------------------------------------------------------------------------------------------------
-% Extensao do predicado utente: IdUt,Nome,Idade,Morada -> {V,F}
+% Extensao do predicado utente: IdUt,Nome,Idade,Morada -> {V,F,D}
 utente(1, carlos, 21, famalicao).
 utente(2, diana, 20, trofa).
 utente(3, marcos, 20, anais).
@@ -68,7 +68,7 @@ utente(9, maria, 43, barcelos).
 utente(10, luis, 51, vizela).
 
 %-----------------------------------------------------------------------------------------------------
-% Extensao do predicado prestador: IdPrest,Nome,Especialidade,Instituicao -> {V,F}
+% Extensao do predicado prestador: IdPrest,Nome,Especialidade,Instituicao -> {V,F,D}
 prestador(1, pres1, pediatria, csjoane).
 prestador(2, pres2, cardiologia, hospitalbraga).
 prestador(3, pres3, cirurgia, hospitalbraga).
@@ -80,7 +80,7 @@ prestador(8, pres8, reumatologia, htrofa).
 prestador(9, pres9, psiquiatria, hospitalbraga).
 
 %-----------------------------------------------------------------------------------------------------
-% Extensao do predicado cuidado: Data,IdUt,IdPrest,Descricao,Custo -> {V,F}
+% Extensao do predicado cuidado: Data,IdUt,IdPrest,Descricao,Custo -> {V,F,D}
 cuidado(01-02-2017, 1, 6, hipnose, 15).
 cuidado(13-02-2017, 3, 4, papanico, 30).
 cuidado(13-02-2017, 2, 5, cerebrotroca, 30).
@@ -96,7 +96,7 @@ cuidado(18-06-2017, 2, 8, reumatomagrafia, 350).
 cuidado(18-06-2017, 2, 9, cbt, 10).
 
 %-----------------------------------------------------------------------------------------------------
-% Extensao do predicado recibo: IdRecibo, IdUt, NomeUt, Morada, Especialidade, Instituicao, Data, Descricao, Custo -> {V,F}
+% Extensao do predicado recibo: IdRecibo, IdUt, NomeUt, Morada, Especialidade, Instituicao, Data, Descricao, Custo -> {V,F,D}
 recibo(1, 3, marcos, anais, ginecologia, hospitalbraga, 13-02-2017, papanico, 30).
 recibo(2, 4, vitor, guimaraes, cardiologia, hospitalbraga, 20-03-2017, pacemaker, 20).
 
@@ -191,7 +191,7 @@ nulointerdito( i5 ).
 
 % ////////////////////////////////////////// Predicados Extra /////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado inserir: Termo -> {V,F}
+% Extensăo do predicado inserir: Termo -> {V,F,D}
 % mesmo que EVOLUCAO
 
 inserir(Termo) :-
@@ -200,7 +200,7 @@ inserir(Termo) :-
 	teste(Lista).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado remover: Termo -> {V,F}
+% Extensăo do predicado remover: Termo -> {V,F,D}
 
 remover(Termo) :-
 	solucoes(Invariante, -Termo::Invariante, Lista),
@@ -208,7 +208,7 @@ remover(Termo) :-
 	remocao(Termo).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado insercao: Termo -> {V,F}
+% Extensăo do predicado insercao: Termo -> {V,F,D}
 
 insercao(T) :-
 	assert(T).
@@ -216,7 +216,7 @@ insercao(T) :-
 	retract(T),!,fail.
 
 % ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado remocao: Termo -> {V,F}
+% Extensăo do predicado remocao: Termo -> {V,F,D}
 
 remocao(T) :-
 	retract(T).
@@ -224,7 +224,7 @@ remocao(T) :-
 	assert(T),!,fail.
 
 % ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado teste: Lista -> {V,F}
+% Extensăo do predicado teste: Lista -> {V,F,D}
 
 teste([]).
 teste([I|L]) :-
@@ -232,31 +232,31 @@ teste([I|L]) :-
 	teste(L).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado solucoes: X,Y,Z -> {V,F}
+% Extensăo do predicado solucoes: X,Y,Z -> {V,F,D}
 
 solucoes(X,Y,Z) :-
 	findall(X,Y,Z).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensăo do predicado comprimento: Lista, Resultado -> {V,F}
+% Extensăo do predicado comprimento: Lista, Resultado -> {V,F,D}
 
 comprimento(X,Z):-
 	length(X,Z).
 
 % ----------------------------------------------------------------------------------------------------
-% Extensao do predicado somatorio: lista, resultado -> {V,F}
+% Extensao do predicado somatorio: lista, resultado -> {V,F,D}
 
 somatorio([], 0).
 somatorio([X|Y], R) :-
 	somatorio(Y,G),
 	R is X+G.
 
-% Extensao do predicado nao: Q -> {V,F}
+% Extensao do predicado nao: Q -> {V,F,D}
 
 nao(Q):- Q, !, fail.
 nao(Q).
 
-% Extensao do predicado quantosTem:A,Lista,Resultado  -> {V,F}
+% Extensao do predicado quantosTem:A,Lista,Resultado  -> {V,F,D}
 
 quantosTem(A,[],0).
 quantosTem(A,[H|T],Resultado):-
@@ -264,7 +264,7 @@ quantosTem(A,[H|T],Resultado):-
 quantosTem(A,[H|T],Resultado):-
 	(A \= H), quantosTem(A,T,Resultado).
 
-% Extensao do predicado pertence: X,L -> {V,F}
+% Extensao do predicado pertence: X,L -> {V,F,D}
 
 pertence(X,[]):- fail.
 pertence(X,[X|T]):- X==X.
@@ -272,7 +272,7 @@ pertence(X,[H|T]):-
 	X\=H,
 	pertence(X,T).
 
-% Extensao do predicado removeDup: L,R -> {V,F}
+% Extensao do predicado removeDup: L,R -> {V,F,D}
 
 removeDup([],[]).
 removeDup([X|T],R):-
@@ -282,14 +282,14 @@ removeDup([X|T],[X|R]):-
 	nao(pertence(X,T)),
 	removeDup(T,R).
 
-% Extensao do predicado ordenarDecresc: L,Resultado -> {V,F}
+% Extensao do predicado ordenarDecresc: L,Resultado -> {V,F,D}
 
 ordenarDecresc([X],[X]).
 ordenarDecresc([X|Y],T):-
 	ordenarDecresc(Y,R),
 	insereOrdenado(X,R,T).
 
-% Extensao do predicado insereOrdenado: X,L,Resultado  -> {V,F}
+% Extensao do predicado insereOrdenado: X,L,Resultado  -> {V,F,D}
 
 insereOrdenado((X1,Y1),[],[(X1,Y1)]).
 insereOrdenado((X1,Y1),[(X2,Y2)|Z],[(X1,Y1)|[(X2,Y2)|Z]]):-
@@ -298,7 +298,7 @@ insereOrdenado((X1,Y1), [(X2,Y2)|Z], [(X2,Y2)|R2]) :-
 	Y1=<Y2,
 	insereOrdenado((X1,Y1),Z,R2).
 
-% Extensao do predicado concatena(L1,L2,L3)->{V,F}
+% Extensao do predicado concatena(L1,L2,L3)->{V,F,D}
 
 concatena([],L2,L2).
 concatena([X|L1],L2,[X|L]) :-
