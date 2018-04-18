@@ -51,7 +51,7 @@ nulointerdito( xpto732 ).
 
 
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
-% Representaçao de conhecimento positivo
+% Representaçao de conhecimento perfeito positivo
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 % Extensao do predicado utente: IdUt,Nome,Idade,Morada -> {V,F,D}
@@ -99,7 +99,7 @@ recibo(2, 4, vitor, guimaraes, cardiologia, hospitalbraga, 20-03-2017, pacemaker
 
 
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
-% Representaçao de conhecimento negativo
+% Representaçao de conhecimento perfeito negativo
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 % Definições das negações fortes (não é verdadeiro ^ não é desconhecido)
@@ -221,7 +221,7 @@ nulointerdito( i6 ).
 
 
 %-----------------------------------------------------------------------------------------------------
-% Manipular invariantes que designem restrições à inserção e à remoção de conhecimento do sistema
+% Manipular invariantes que designem restrições à inserção e à remoção de conhecimento POSITIVO do sistema
 %-----------------------------------------------------------------------------------------------------
 
 % ----------------------------------------------------------------------------------------------------
@@ -247,11 +247,9 @@ nulointerdito( i6 ).
 						comprimento(LisU, NumU),
 						NumU == 1).
 
-
 % ----------------------------------------------------------------------------------------------------
 % Invariante que năo permite a inserçăo de conhecimento de um recibo com um id já existente
 % uso _ quando o dado năo é importante e năo quero saber dele
-
 +recibo(Id, U, N, M, E, I, Dat, D, C) :: (solucoes(Id, recibo(Id,_,_,_,_,_,_,_,_), R),
 					comprimento(R,Lr),
 					Lr==1,
@@ -302,6 +300,93 @@ nulointerdito( i6 ).
 
 
 
+%-----------------------------------------------------------------------------------------------------
+% Manipular invariantes que designem restrições à inserção e à remoção de conhecimento NEGATIVO do sistema
+%-----------------------------------------------------------------------------------------------------
+
+% ----------------------------------------------------------------------------------------------------
+% Invariante estrutural: nao permitir a insercao de negação forte de utente repetido
++(-utente(Id, Nome, Idade, Morada)) :: (
+										solucoes(Id, -utente(Id, Nome, Idade, Morada), S),
+										comprimento(S, N),
+									 	N == 1
+										).
+
+% ----------------------------------------------------------------------------------------------------
+% Invariante estrutural: nao permitir a insercao de negação forte de prestador repetido
++(-prestador(Id, Nome, Especialidade, Instituicao)) :: (
+										solucoes(Id, -prestador(Id, Nome, Especialidade, Instituicao), S),
+										comprimento(S, N),
+									 	N == 1
+										).
+
+% ----------------------------------------------------------------------------------------------------
+% Invariante estrutural: nao permitir a insercao de negação forte de cuidado repetido
++(-cuidado(Dat, Utente, Prestador, Data, Cuidado)) :: (
+										solucoes((Dat,U,P,D,C), -cuidado(Dat, Utente, Prestador, Data, Cuidado), S),
+										comprimento(S, N),
+									 	N == 1
+										).
+
+% ----------------------------------------------------------------------------------------------------
+% Invariante estrutural: nao permitir a insercao de negação forte de recibo
++(-recibo(Id, U, N, M, E, I, Dat, D, C)) :: fail.
+
+
+
+
+
+
+% ////////////////////////////////////////////////////////////////////////////////////////////////////
+% ////////////////////////////////////// Predicados importantes //////////////////////////////////////
+% ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+% ----------------------------------------------------------------------------------------------------
+% Extensao do meta-predicado demo: Questao,Resposta -> {verdadeiro, falso, desconhecido}
+demo( Questao,verdadeiro ) :-
+    Questao.
+demo( Questao, falso ) :-
+    -Questao.
+demo( Questao,desconhecido ) :-
+    nao( Questao ),
+    nao( -Questao ).
+
+
+%-----------------------------------------------------------------------------------------------------
+% Evolução do conhecimento 
+% permite adicionar conhecimento ou atualizar conhecimento imperfeito
+%-----------------------------------------------------------------------------------------------------
+% A VERIFICAR -----------------------------------------------------------------------------------------------------------@@@@@@@@@@@@@@@@@@@@@@
+
+evolucao(utente(Id,Nome,Idade,Morada)):-
+		demo(utente(Id,Nome,Idade,Morada),desconhecido),
+		findall(utente(Id,N,I,M), utente(Id,N,I,M),L),
+		remocaoL(utente(Id,Nome,Idade,Morada),L).
+
+evolucao(utente(Id,Nome,Idade,Morada)):-
+		demo(utente(Id,Nome,Idade,Morada),falso),
+		registar(utente(Id,Nome,Idade,Morada)).
+
+evolucao(cuidadoPrestado( Id,Desc,Inst,Cidade ) ):-
+		demo(cuidadoPrestado(Id,Desc,Inst,Cidade) ,desconhecido),
+		findall(cuidadoPrestado(Id,E,I,C), cuidadoPrestado(Id,E,I,C),L),
+		remocaoL(cuidadoPrestado( Id,Desc,Inst,Cidade ),L).
+
+evolucao(cuidadoPrestado( Id,Desc,Inst,Cidade ) ):-
+		demo(cuidadoPrestado(Id,Desc,Inst,Cidade),falso),
+		registar(cuidadoPrestado( X,Desc,Inst,Cidade)).
+
+evolucao(atoMedico(Data,IdU, IdS,Custo)):-
+		demo(atoMedico(Data,IdU, IdS,Custo),desconhecido),
+		findall(atoMedico(Data,IdU, IdS,Custo), atoMedico(Data,IdU, IdS,Custo),L),
+		remocaoL(atoMedico(Data,IdU, IdS,Custo),L).
+
+evolucao(atoMedico(Data,IdU, IdS,Custo)):-
+		demo(atoMedico(Data,IdU, IdS,Custo),falso),
+		registar(atoMedico(Data,IdU, IdS,Custo)).
+
+
+
 
 
 
@@ -345,6 +430,26 @@ remocao(T) :-
 
 
 % ----------------------------------------------------------------------------------------------------
+% Extensão do predicado que permite a remover conhecimento de uma lista
+
+remocaoL( Termo,L ) :-
+    retractL( L ),
+    inserir(Termo).
+remocaoL( Termo,L) :-
+    assertL( L ),!,fail.
+
+retractL([]).
+retractL([X|L]):- 
+		retract(X), 
+		retractL(L).
+
+assertL([]).
+assertL([X|L]):- 
+		assert(X), 
+		assertL(L).
+
+
+% ----------------------------------------------------------------------------------------------------
 % Extensăo do predicado teste: Lista -> {V,F}
 
 teste([]).
@@ -381,6 +486,7 @@ somatorio([X|Y], R) :-
 
 nao(Q):- Q, !, fail.
 nao(Q).
+
 
 
 % ----------------------------------------------------------------------------------------------------
