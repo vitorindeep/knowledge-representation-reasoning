@@ -365,7 +365,7 @@ evolucao(utente(Id,Nome,Idade,Morada)):-
 
 evolucao(utente(Id,Nome,Idade,Morada)):-
 		demo(utente(Id,Nome,Idade,Morada),falso),
-		registar(utente(Id,Nome,Idade,Morada)).
+		inserir(utente(Id,Nome,Idade,Morada)).
 
 evolucao(cuidadoPrestado( Id,Desc,Inst,Cidade ) ):-
 		demo(cuidadoPrestado(Id,Desc,Inst,Cidade) ,desconhecido),
@@ -374,7 +374,7 @@ evolucao(cuidadoPrestado( Id,Desc,Inst,Cidade ) ):-
 
 evolucao(cuidadoPrestado( Id,Desc,Inst,Cidade ) ):-
 		demo(cuidadoPrestado(Id,Desc,Inst,Cidade),falso),
-		registar(cuidadoPrestado( X,Desc,Inst,Cidade)).
+		inserir(cuidadoPrestado( X,Desc,Inst,Cidade)).
 
 evolucao(atoMedico(Data,IdU, IdS,Custo)):-
 		demo(atoMedico(Data,IdU, IdS,Custo),desconhecido),
@@ -383,7 +383,7 @@ evolucao(atoMedico(Data,IdU, IdS,Custo)):-
 
 evolucao(atoMedico(Data,IdU, IdS,Custo)):-
 		demo(atoMedico(Data,IdU, IdS,Custo),falso),
-		registar(atoMedico(Data,IdU, IdS,Custo)).
+		inserir(atoMedico(Data,IdU, IdS,Custo)).
 
 
 
@@ -394,7 +394,7 @@ evolucao(atoMedico(Data,IdU, IdS,Custo)):-
 % ////////////////////////////////////////// Predicados Extra ////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Extensăo do predicado inserir: Termo -> {V,F}
-% mesmo que EVOLUCAO
+% mesmo que EVOLUCAO da PARTE 1
 
 inserir(Termo) :-
 	solucoes(Invariante, +Termo::Invariante, Lista),
