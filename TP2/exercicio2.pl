@@ -51,7 +51,7 @@ nulointerdito( xpto732 ).
 
 
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
-% Representaçao de conhecimento perfeito positivo
+% 					Representaçao de conhecimento perfeito positivo
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 % Extensao do predicado utente: IdUt,Nome,Idade,Morada -> {V,F,D}
@@ -99,7 +99,7 @@ recibo(2, 4, vitor, guimaraes, cardiologia, hospitalbraga, 20-03-2017, pacemaker
 
 
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
-% Representaçao de conhecimento perfeito negativo
+% 					Representaçao de conhecimento perfeito negativo
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 % Definições das negações fortes (não é verdadeiro ^ não é desconhecido)
@@ -123,7 +123,7 @@ recibo(2, 4, vitor, guimaraes, cardiologia, hospitalbraga, 20-03-2017, pacemaker
 
 
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
-% Representar casos de conhecimento imperfeito incerto
+% 					Representar casos de conhecimento imperfeito incerto
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 % ----------------------------------------------------------------------------------------------------
@@ -154,7 +154,7 @@ recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i4) :-
 
 
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
-% Representar casos de conhecimento imperfeito impreciso
+% 					Representar casos de conhecimento imperfeito impreciso
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 % ----------------------------------------------------------------------------------------------------
@@ -191,7 +191,7 @@ excecao( recibo(3, 2, diana, trofa, nutricao, htrofa, 28-03-2017, rotina, 50) ).
 
 
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
-% Representar casos de conhecimento imperfeito interdito
+% 					Representar casos de conhecimento imperfeito interdito
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 % ----------------------------------------------------------------------------------------------------
@@ -213,7 +213,7 @@ recibo( 4, 7, marta, guimaraes, dermatologia, i6, 04-12-2017, peelingquimico, 30
 excecao( recibo(A, B, C, D, E, F, G, H, I) ) :-
 	recibo(A, B, C, D, E, i6, G, H, I).
 nulointerdito( i6 ).
-+recibo(A, B, C, D, E, F, G, H, I) :: ( solucoes((A, B, C, D, E, G, H, I), (recibo( 4, 7, marta, guimaraes, dermatologia, i6, 04-12-2017, peelingquimico, 30), nao(nulointerdito(i6))), List ),
++recibo(A, B, C, D, E, F, G, H, I) :: ( solucoes((A, B, C, D, E, G, H, I), (recibo( 4, 7, marta, guimaraes, dermatologia, i6, 04-12-2017, peelingquimico, 30), 												nao(nulointerdito(i6))), List ),
                  		  	   			comprimento( List, N ),
                  		  	  		 	N == 0
                  		  	   			).
