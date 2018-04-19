@@ -408,34 +408,48 @@ disjuncao(falso,falso,falso).
 % Evolução do conhecimento 
 % permite adicionar conhecimento ou atualizar conhecimento imperfeito
 %-----------------------------------------------------------------------------------------------------
-% A VERIFICAR -----------------------------------------------------------------------------------------------------------@@@@@@@@@@@@@@@@@@@@@@
+
+% Extensao do predicado utente: IdUt,Nome,Idade,Morada -> {V,F,D}
+% Extensao do predicado prestador: IdPrest,Nome,Especialidade,Instituicao -> {V,F,D}
+% Extensao do predicado cuidado: Data,IdUt,IdPrest,Descricao,Custo -> {V,F,D}
+% Extensao do predicado recibo: IdRecibo, IdUt, NomeUt, Morada, Especialidade, Instituicao, Data, Descricao, Custo -> {V,F,D}
+
 
 evolucao(utente(Id,Nome,Idade,Morada)):-
 		demo(utente(Id,Nome,Idade,Morada),desconhecido),
-		findall(utente(Id,N,I,M), utente(Id,N,I,M),L),
+		solucoes(utente(Id,N,I,M), utente(Id,N,I,M),L),
 		remocaoL(utente(Id,Nome,Idade,Morada),L).
 
 evolucao(utente(Id,Nome,Idade,Morada)):-
 		demo(utente(Id,Nome,Idade,Morada),falso),
 		inserir(utente(Id,Nome,Idade,Morada)).
 
-evolucao(cuidadoPrestado( Id,Desc,Inst,Cidade ) ):-
-		demo(cuidadoPrestado(Id,Desc,Inst,Cidade) ,desconhecido),
-		findall(cuidadoPrestado(Id,E,I,C), cuidadoPrestado(Id,E,I,C),L),
-		remocaoL(cuidadoPrestado( Id,Desc,Inst,Cidade ),L).
+evolucao(prestador( Id,Nome,Especialidade,Instituicao ) ):-
+		demo(prestador(Id,Nome,Especialidade,Instituicao),desconhecido),
+		solucoes(prestador(Id,N,E,I), prestador(Id,N,E,I),L),
+		remocaoL(prestador(Id,Nome,Especialidade,Instituicao),L).
 
-evolucao(cuidadoPrestado( Id,Desc,Inst,Cidade ) ):-
-		demo(cuidadoPrestado(Id,Desc,Inst,Cidade),falso),
-		inserir(cuidadoPrestado( X,Desc,Inst,Cidade)).
+evolucao(prestador( Id,Nome,Especialidade,Instituicao ) ):-
+		demo(prestador(Id,Nome,Especialidade,Instituicao),falso),
+		inserir(prestador(Id,Nome,Especialidade,Instituicao)).
 
-evolucao(atoMedico(Data,IdU, IdS,Custo)):-
-		demo(atoMedico(Data,IdU, IdS,Custo),desconhecido),
-		findall(atoMedico(Data,IdU, IdS,Custo), atoMedico(Data,IdU, IdS,Custo),L),
-		remocaoL(atoMedico(Data,IdU, IdS,Custo),L).
+evolucao(cuidado(Data,IdU,IdP,Descricao,Custo)):-
+		demo(cuidado(Data,IdU,IdP,Descricao,Custo),desconhecido),
+		solucoes(cuidado(Data,IdU,IdP,Descricao,Custo), cuidado(Data,IdU,IdP,Descricao,Custo),L),
+		remocaoL(cuidado(Data,IdU,IdP,Descricao,Custo),L).
 
-evolucao(atoMedico(Data,IdU, IdS,Custo)):-
-		demo(atoMedico(Data,IdU, IdS,Custo),falso),
-		inserir(atoMedico(Data,IdU, IdS,Custo)).
+evolucao(cuidado(Data,IdU,IdP,Descricao,Custo)):-
+		demo(cuidado(Data,IdU,IdP,Descricao,Custo),falso),
+		inserir(cuidado(Data,IdU,IdP,Descricao,Custo)).
+
+evolucao(recibo(Data,IdU, IdS,Custo)):-
+		demo(recibo(IdR, IdU, NomeU, Morada, Especialidade, Instituicao, Data, Descricao, Custo),desconhecido),
+		solucoes(recibo(IdR, IdU, NomeU, Morada, Especialidade, Instituicao, Data, Descricao, Custo), recibo(IdR, IdU, NomeU, Morada, Especialidade, Instituicao, Data, Descricao, Custo),L),
+		remocaoL(recibo(IdR, IdU, NomeU, Morada, Especialidade, Instituicao, Data, Descricao, Custo),L).
+
+evolucao(recibo(IdR, IdU, NomeU, Morada, Especialidade, Instituicao, Data, Descricao, Custo)):-
+		demo(recibo(IdR, IdU, NomeU, Morada, Especialidade, Instituicao, Data, Descricao, Custo),falso),
+		inserir(recibo(IdR, IdU, NomeU, Morada, Especialidade, Instituicao, Data, Descricao, Custo)).
 
 
 
@@ -538,7 +552,6 @@ somatorio([X|Y], R) :-
 
 nao(Q):- Q, !, fail.
 nao(Q).
-
 
 
 % ----------------------------------------------------------------------------------------------------
