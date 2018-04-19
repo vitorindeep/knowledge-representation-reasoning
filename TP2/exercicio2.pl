@@ -22,6 +22,11 @@
 :- dynamic cuidado/5.
 :- dynamic recibo/9.
 
+% Para a conjunção e disjunção de demo
+
+:- op(900,xfy,'e').
+:- op(900,xfy,'ou').
+
 
 %------------------------------------------OBJETIVOS--------------------------------------------------
 - Representar conhecimento positivo e negativo;
@@ -350,6 +355,53 @@ demo( Questao, falso ) :-
 demo( Questao,desconhecido ) :-
     nao( Questao ),
     nao( -Questao ).
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Extensao do meta-predicado demoL: ListaQuestoes,ListaRespostas -> {V,F,D}
+% Responde individualmente às questões de uma lista de questões
+demoL([],[]).
+demoL([Q|TQ],[R|TR]) :- demo(Q,R), demoL(TQ,TR).
+
+% ----------------------------------------------------------------------------------------------------
+% Extensao do meta-predicado demoComp: ConjQuestoes,Resposta -> {verdadeiro, falso, desconhecido}
+% Trata de fazer o demo de disjunção, conjunção ou nada
+demoComp(Q1 e Q2, R) :-
+					demo(Q1,R1),
+					demoComp(Q2,R2),
+					conjuncao(R1,R2,R).
+demoComp(Q1 ou Q2, R) :-
+					demo(Q1,R1),
+					demoComp(Q2,R2),
+					disjuncao(R1,R2,R).
+demoComp(Q1, R) :- demo(Q1,R).
+
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Extensao do meta-predicado conjuncao: ValorLogico,ValorLogico,ValorLogico -> {V,F,D}
+% O terceiro argumento corresponde ao valor lógico correspondente à conjunção dos valores lógicos dos dois primeiros argumentos
+% Entendem-se valores lógicos como: verdadeiro, falso ou desconhecido
+conjuncao(verdadeiro,verdadeiro,verdadeiro).
+conjuncao(verdadeiro,desconhecido,desconhecido).
+conjuncao(verdadeiro,falso,falso).
+conjuncao(desconhecido,verdadeiro,desconhecido).
+conjuncao(desconhecido,desconhecido,desconhecido).
+conjuncao(desconhecido,falso,falso).
+conjuncao(falso,_,falso).
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Extensao do meta-predicado disjuncao: ValorLogico,ValorLogico,ValorLogico -> {V,F,D}
+% O terceiro argumento corresponde ao valor lógico correspondente à conjunção dos valores lógicos dos dois primeiros argumentos
+% Entendem-se valores lógicos como: verdadeiro, falso ou desconhecido
+disjuncao(verdadeiro,verdadeiro,verdadeiro).
+disjuncao(verdadeiro,desconhecido,verdadeiro).
+disjuncao(verdadeiro,falso,verdadeiro).
+disjuncao(desconhecido,verdadeiro,verdadeiro).
+disjuncao(desconhecido,desconhecido,desconhecido).
+disjuncao(desconhecido,falso,desconhecido).
+disjuncao(falso,verdadeiro,verdadeiro).
+disjuncao(falso,desconhecido,desconhecido).
+disjuncao(falso,falso,falso).
+
 
 
 %-----------------------------------------------------------------------------------------------------

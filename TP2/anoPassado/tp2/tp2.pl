@@ -515,7 +515,7 @@ demoC(Q1,R1) :- demo(Q1,R1).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensao do meta-predicado registar: Termo -> {V,F,D}
-%permite a atualizacao de conhecimento imperfeito,
+% permite a atualizacao de conhecimento imperfeito,
 % e insercao de conhecimento imperfeito incerto/ normal).
 
 
