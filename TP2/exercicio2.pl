@@ -29,29 +29,29 @@
 
 
 %------------------------------------------OBJETIVOS--------------------------------------------------
-- Representar conhecimento positivo e negativo;
-- Representar casos de conhecimento imperfeito, pela utilização de valores nulos de todos os tipos estudados;
-- Manipular invariantes que designem restrições à inserção e à remoção de conhecimento do sistema;
-- Lidar com a problemática da evolução do conhecimento, criando os procedimentos adequados;  ------------- MÉTODO TROLHA OU ENGENHEIRO
-- Desenvolver um sistema de inferência capaz de implementar os mecanismos de raciocínio inerentes a estes sistemas.
+% - Representar conhecimento positivo e negativo;
+% - Representar casos de conhecimento imperfeito, pela utilização de valores nulos de todos os tipos estudados;
+% - Manipular invariantes que designem restrições à inserção e à remoção de conhecimento do sistema;
+% - Lidar com a problemática da evolução do conhecimento, criando os procedimentos adequados;  ------------- MÉTODO TROLHA OU ENGENHEIRO
+% - Desenvolver um sistema de inferência capaz de implementar os mecanismos de raciocínio inerentes a estes sistemas.
 
 
 %-----------------------------------------RESUMO GERAL------------------------------------------------
 % A Belem e filha de uma pessoa de que se desconhece a identidade
-filho( belem,xpto023 ).
-excecao( filho(F,P) ) :-
-	filho( F,xpto023 ).
+% filho( belem,xpto023 ).
+% excecao( filho(F,P) ) :-
+% 	filho( F,xpto023 ).
 
 % A Maria e filha do Faria ou do Garcia
-excecao( filho(maria,faria) ).
-excecao( filho(maria,garcia) ).
+% excecao( filho(maria,faria) ).
+% excecao( filho(maria,garcia) ).
 
 % O Julio tem um filho que ninguem pode conhecer
-filho( xpto732,julio ).
-excecao( filho(F,P) ) :-
-	filho( xpto732,P ).
-nulointerdito( xpto732 ).
-+filho( F,P ) :: (solucoes())
+% filho( xpto732,julio ).
+% excecao( filho(F,P) ) :-
+% 	filho( xpto732,P ).
+% nulointerdito( xpto732 ).
+% +filho( F,P ) :: (solucoes())
 
 
 
