@@ -142,10 +142,8 @@ excecao( utente( A, B, C, D ) ) :-
 % nem qual a especialidade que o mesmo exerce. 
 prestador(11, i2, i3, hospitalbraga).
 excecao( prestador( A, B, C, D ) ) :-
-	prestador( A, i2, C, D).
-excecao( prestador( A, B, C, D ) ) :-
-	prestador( A, B, i3, D).
-
+	prestador( A, i2, i3, D).
+	
 % ----------------------------------------------------------------------------------------------------
 % Existe um recibo (idRecibo=5) do utente com id=10, intitulado luis, que vive em vizela e efetuou,
 % no hospital de braga, hipnose na área da psiquiatria, na data 02-11-2017.
