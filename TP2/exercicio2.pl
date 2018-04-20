@@ -143,16 +143,6 @@ excecao( utente( A, B, C, D ) ) :-
 prestador(11, i2, i3, hospitalbraga).
 excecao( prestador( A, B, C, D ) ) :-
 	prestador( A, i2, i3, D).
-	
-% ----------------------------------------------------------------------------------------------------
-% Existe um recibo (idRecibo=5) do utente com id=10, intitulado luis, que vive em vizela e efetuou,
-% no hospital de braga, hipnose na área da psiquiatria, na data 02-11-2017.
-% Desconhece-se o custo declarado no recibo, no entanto sabe-se que se situa entre 35€ e 60€.
-recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i4).
-excecao( recibo(A, B, C, D, E, F, G, H, I) ) :-
-				recibo(A, B, C, D, E, F, G, H, i4).
-recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i4) :-
-				i4 > 35, i4 < 60.
 
 
 
@@ -191,7 +181,14 @@ excecao( cuidado(12-05-2017, 8, 5, quimioterapia, 70) ).
 excecao( recibo(3, 2, diana, trofa, nutricao, htrofa, 27-03-2017, rotina, 50) ).
 excecao( recibo(3, 2, diana, trofa, nutricao, htrofa, 28-03-2017, rotina, 50) ).
 
-
+% ----------------------------------------------------------------------------------------------------
+% Existe um recibo (idRecibo=5) do utente com id=10, intitulado luis, que vive em vizela e efetuou,
+% no hospital de braga, hipnose na área da psiquiatria, na data 02-11-2017.
+% Desconhece-se o custo declarado no recibo, no entanto sabe-se que se situa entre 35€ e 60€.
+recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i4).
+excecao( recibo(A, B, C, D, E, F, G, H, I) ) :-
+				recibo(A, B, C, D, E, F, G, H, i4),
+				I > 35, I < 60.
 
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
 % 					Representar casos de conhecimento imperfeito interdito
