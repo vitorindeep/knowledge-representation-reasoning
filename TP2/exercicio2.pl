@@ -28,14 +28,6 @@
 :- op(900,xfy,'ou').
 
 
-%------------------------------------------OBJETIVOS--------------------------------------------------
-% - Representar conhecimento positivo e negativo;
-% - Representar casos de conhecimento imperfeito, pela utilização de valores nulos de todos os tipos estudados;
-% - Manipular invariantes que designem restrições à inserção e à remoção de conhecimento do sistema;
-% - Lidar com a problemática da evolução do conhecimento, criando os procedimentos adequados;  ------------- MÉTODO TROLHA OU ENGENHEIRO
-% - Desenvolver um sistema de inferência capaz de implementar os mecanismos de raciocínio inerentes a estes sistemas.
-
-
 
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
 % 					Representaçao de conhecimento perfeito positivo
