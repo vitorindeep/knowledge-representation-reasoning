@@ -108,7 +108,7 @@ recibo(2, 4, vitor, guimaraes, cardiologia, hospitalbraga, 20-03-2017, pacemaker
 					nao(excecao(recibo(IdR, IdU, N, M, E, I, D, De, C))).
 
 
-% Negação explícits
+% Negação explícita
 
 -utente(13,joaquim,65,braganca).
 
