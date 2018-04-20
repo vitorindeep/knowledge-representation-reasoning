@@ -36,24 +36,6 @@
 % - Desenvolver um sistema de inferência capaz de implementar os mecanismos de raciocínio inerentes a estes sistemas.
 
 
-%-----------------------------------------RESUMO GERAL------------------------------------------------
-% A Belem e filha de uma pessoa de que se desconhece a identidade
-% filho( belem,xpto023 ).
-% excecao( filho(F,P) ) :-
-% 	filho( F,xpto023 ).
-
-% A Maria e filha do Faria ou do Garcia
-% excecao( filho(maria,faria) ).
-% excecao( filho(maria,garcia) ).
-
-% O Julio tem um filho que ninguem pode conhecer
-% filho( xpto732,julio ).
-% excecao( filho(F,P) ) :-
-% 	filho( xpto732,P ).
-% nulointerdito( xpto732 ).
-% +filho( F,P ) :: (solucoes())
-
-
 
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
 % 					Representaçao de conhecimento perfeito positivo
@@ -126,6 +108,11 @@ recibo(2, 4, vitor, guimaraes, cardiologia, hospitalbraga, 20-03-2017, pacemaker
 					nao(excecao(recibo(IdR, IdU, N, M, E, I, D, De, C))).
 
 
+% Negação explícits
+
+-utente(13,joaquim,65,braganca).
+
+
 
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
 % 					Representar casos de conhecimento imperfeito incerto
@@ -190,13 +177,15 @@ excecao( recibo(A, B, C, D, E, F, G, H, I) ) :-
 				recibo(A, B, C, D, E, F, G, H, i4),
 				I > 35, I < 60.
 
+
+
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
 % 					Representar casos de conhecimento imperfeito interdito
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 % ----------------------------------------------------------------------------------------------------
 % Não se pode saber qual a descrição do cuidado realizado a 13-08-2017, prestado pelo prestador com id=7
-% ao utente com id=10, sendo que o custo foi de 75€.
+% ao utente com id=10, sendo que o custo foi de 45€.
 cuidado( 13-08-2017, 10, 7, i5, 45).
 excecao( cuidado(A, B, C, D, E) ) :-
 	cuidado(A, B, C, i5, E).
@@ -220,9 +209,9 @@ nulointerdito( i6 ).
 
 
 
-%-----------------------------------------------------------------------------------------------------
+% ////////////////////////////////////////////////////////////////////////////////////////////////////
 % Manipular invariantes que designem restrições à inserção e à remoção de conhecimento POSITIVO do sistema
-%-----------------------------------------------------------------------------------------------------
+% ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 % ----------------------------------------------------------------------------------------------------
 % Invariante que năo permite a inserçăo de conhecimento de um utente com um id já existente
@@ -297,43 +286,6 @@ nulointerdito( i6 ).
 % Invariante que não permite a remoção de qualquer recibo, uma vez que a informação
 % financeira nunca pode ser eliminada. Anti-fraude.
 -recibo(Id, U, N, M, E, I, Dat, D, C) :: fail.
-
-
-
-%-----------------------------------------------------------------------------------------------------
-% Manipular invariantes que designem restrições à inserção e à remoção de conhecimento NEGATIVO do sistema
-%-----------------------------------------------------------------------------------------------------
-
-% ----------------------------------------------------------------------------------------------------
-% Invariante estrutural: nao permitir a insercao de negação forte de utente repetido
-+(-utente(Id, Nome, Idade, Morada)) :: (
-										solucoes(Id, -utente(Id, Nome, Idade, Morada), S),
-										comprimento(S, N),
-									 	N == 1
-										).
-
-% ----------------------------------------------------------------------------------------------------
-% Invariante estrutural: nao permitir a insercao de negação forte de prestador repetido
-+(-prestador(Id, Nome, Especialidade, Instituicao)) :: (
-										solucoes(Id, -prestador(Id, Nome, Especialidade, Instituicao), S),
-										comprimento(S, N),
-									 	N == 1
-										).
-
-% ----------------------------------------------------------------------------------------------------
-% Invariante estrutural: nao permitir a insercao de negação forte de cuidado repetido
-+(-cuidado(Dat, Utente, Prestador, Data, Cuidado)) :: (
-										solucoes((Dat,U,P,D,C), -cuidado(Dat, Utente, Prestador, Data, Cuidado), S),
-										comprimento(S, N),
-									 	N == 1
-										).
-
-% ----------------------------------------------------------------------------------------------------
-% Invariante estrutural: nao permitir a insercao de negação forte de recibo
-+(-recibo(Id, U, N, M, E, I, Dat, D, C)) :: fail.
-
-
-
 
 
 
