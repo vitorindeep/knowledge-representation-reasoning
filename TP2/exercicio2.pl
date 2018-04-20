@@ -190,10 +190,14 @@ cuidado( 13-08-2017, 10, 7, i5, 45).
 excecao( cuidado(A, B, C, D, E) ) :-
 	cuidado(A, B, C, i5, E).
 nulointerdito( i5 ).
-+cuidado( A, B, C, D, E ) :: ( solucoes((A,B,C,E), (cuidado( 13-08-2017, 10, 7, i5, 45), nao(nulointerdito(i5))), List),
-                 		  	   comprimento( List, N ),
-                 		  	   N == 0
-                 		  	 ).
++cuidado( A, B, C, D, E ) :: ( 	solucoes(
+											(A,B,C,Interdito,E),
+											(cuidado( 13-08-2017, 10, 7, Interdito, 45), nao(nulointerdito(Interdito))),
+											List
+								),
+                 		  		comprimento( List, N ),
+                 		  		N == 0
+                 		  	).
 
 % ----------------------------------------------------------------------------------------------------
 % Nunca se poderá saber, a partir do recibo com id=4, em que instituição foi prestado um peeling químico,
@@ -202,7 +206,11 @@ recibo( 4, 7, marta, guimaraes, dermatologia, i6, 04-12-2017, peelingquimico, 30
 excecao( recibo(A, B, C, D, E, F, G, H, I) ) :-
 	recibo(A, B, C, D, E, i6, G, H, I).
 nulointerdito( i6 ).
-+recibo(A, B, C, D, E, F, G, H, I) :: ( solucoes((A, B, C, D, E, G, H, I), (recibo( 4, 7, marta, guimaraes, dermatologia, i6, 04-12-2017, peelingquimico, 30), 												nao(nulointerdito(i6))), List ),
++recibo(A, B, C, D, E, F, G, H, I) :: ( solucoes(
+													(A, B, C, D, E, Interdito, G, H, I),
+													(recibo( 4, 7, marta, guimaraes, dermatologia, Interdito, 04-12-2017, peelingquimico, 30), nao(nulointerdito(Interdito))),
+													List
+										),
                  		  	   			comprimento( List, N ),
                  		  	  		 	N == 0
                  		  	   			).
