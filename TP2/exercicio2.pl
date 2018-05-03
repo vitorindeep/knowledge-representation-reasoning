@@ -22,31 +22,10 @@
 :- dynamic cuidado/5.
 :- dynamic recibo/9.
 
+% Para a conjunção e disjunção de demo
 
-%------------------------------------------OBJETIVOS--------------------------------------------------
-- Representar conhecimento positivo e negativo;
-- Representar casos de conhecimento imperfeito, pela utilização de valores nulos de todos os tipos estudados;
-- Manipular invariantes que designem restrições à inserção e à remoção de conhecimento do sistema;
-- Lidar com a problemática da evolução do conhecimento, criando os procedimentos adequados;  ------------- MÉTODO TROLHA OU ENGENHEIRO
-- Desenvolver um sistema de inferência capaz de implementar os mecanismos de raciocínio inerentes a estes sistemas.
-
-
-%-----------------------------------------RESUMO GERAL------------------------------------------------
-% A Belem e filha de uma pessoa de que se desconhece a identidade
-filho( belem,xpto023 ).
-excecao( filho(F,P) ) :-
-	filho( F,xpto023 ).
-
-% A Maria e filha do Faria ou do Garcia
-excecao( filho(maria,faria) ).
-excecao( filho(maria,garcia) ).
-
-% O Julio tem um filho que ninguem pode conhecer
-filho( xpto732,julio ).
-excecao( filho(F,P) ) :-
-	filho( xpto732,P ).
-nulointerdito( xpto732 ).
-+filho( F,P ) :: (solucoes())
+:- op(900,xfy,'e').
+:- op(900,xfy,'ou').
 
 
 
@@ -121,6 +100,11 @@ recibo(2, 4, vitor, guimaraes, cardiologia, hospitalbraga, 20-03-2017, pacemaker
 					nao(excecao(recibo(IdR, IdU, N, M, E, I, D, De, C))).
 
 
+% Negação explícita
+
+-utente(13,joaquim,65,braganca).
+
+
 
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
 % 					Representar casos de conhecimento imperfeito incerto
@@ -137,19 +121,7 @@ excecao( utente( A, B, C, D ) ) :-
 % nem qual a especialidade que o mesmo exerce. 
 prestador(11, i2, i3, hospitalbraga).
 excecao( prestador( A, B, C, D ) ) :-
-	prestador( A, i2, C, D).
-excecao( prestador( A, B, C, D ) ) :-
-	prestador( A, B, i3, D).
-
-% ----------------------------------------------------------------------------------------------------
-% Existe um recibo (idRecibo=5) do utente com id=10, intitulado luis, que vive em vizela e efetuou,
-% no hospital de braga, hipnose na área da psiquiatria, na data 02-11-2017.
-% Desconhece-se o custo declarado no recibo, no entanto sabe-se que se situa entre 35€ e 60€.
-recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i4).
-excecao( recibo(A, B, C, D, E, F, G, H, I) ) :-
-				recibo(A, B, C, D, E, F, G, H, i4).
-recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i4) :-
-				i4 > 35, i4 < 60.
+	prestador( A, i2, i3, D).
 
 
 
@@ -188,6 +160,15 @@ excecao( cuidado(12-05-2017, 8, 5, quimioterapia, 70) ).
 excecao( recibo(3, 2, diana, trofa, nutricao, htrofa, 27-03-2017, rotina, 50) ).
 excecao( recibo(3, 2, diana, trofa, nutricao, htrofa, 28-03-2017, rotina, 50) ).
 
+% ----------------------------------------------------------------------------------------------------
+% Existe um recibo (idRecibo=5) do utente com id=10, intitulado luis, que vive em vizela e efetuou,
+% no hospital de braga, hipnose na área da psiquiatria, na data 02-11-2017.
+% Desconhece-se o custo declarado no recibo, no entanto sabe-se que se situa entre 35€ e 60€.
+recibo(5, 10, luis, vizela, psiquiatria, hbraga, 02-11-2017, hipnose, i4).
+excecao( recibo(A, B, C, D, E, F, G, H, I) ) :-
+				recibo(A, B, C, D, E, F, G, H, i4),
+				I > 35, I < 60.
+
 
 
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -196,15 +177,19 @@ excecao( recibo(3, 2, diana, trofa, nutricao, htrofa, 28-03-2017, rotina, 50) ).
 
 % ----------------------------------------------------------------------------------------------------
 % Não se pode saber qual a descrição do cuidado realizado a 13-08-2017, prestado pelo prestador com id=7
-% ao utente com id=10, sendo que o custo foi de 75€.
+% ao utente com id=10, sendo que o custo foi de 45€.
 cuidado( 13-08-2017, 10, 7, i5, 45).
 excecao( cuidado(A, B, C, D, E) ) :-
 	cuidado(A, B, C, i5, E).
 nulointerdito( i5 ).
-+cuidado( A, B, C, D, E ) :: ( solucoes((A,B,C,E), (cuidado( 13-08-2017, 10, 7, i5, 45), nao(nulointerdito(i5))), List),
-                 		  	   comprimento( List, N ),
-                 		  	   N == 0
-                 		  	 ).
++cuidado( A, B, C, D, E ) :: ( 	solucoes(
+											(A,B,C,Interdito,E),
+											(cuidado( 13-08-2017, 10, 7, Interdito, 45), nao(nulointerdito(Interdito))),
+											List
+								),
+                 		  		comprimento( List, N ),
+                 		  		N == 0
+                 		  	).
 
 % ----------------------------------------------------------------------------------------------------
 % Nunca se poderá saber, a partir do recibo com id=4, em que instituição foi prestado um peeling químico,
@@ -213,16 +198,20 @@ recibo( 4, 7, marta, guimaraes, dermatologia, i6, 04-12-2017, peelingquimico, 30
 excecao( recibo(A, B, C, D, E, F, G, H, I) ) :-
 	recibo(A, B, C, D, E, i6, G, H, I).
 nulointerdito( i6 ).
-+recibo(A, B, C, D, E, F, G, H, I) :: ( solucoes((A, B, C, D, E, G, H, I), (recibo( 4, 7, marta, guimaraes, dermatologia, i6, 04-12-2017, peelingquimico, 30), 												nao(nulointerdito(i6))), List ),
++recibo(A, B, C, D, E, F, G, H, I) :: ( solucoes(
+													(A, B, C, D, E, Interdito, G, H, I),
+													(recibo( 4, 7, marta, guimaraes, dermatologia, Interdito, 04-12-2017, peelingquimico, 30), nao(nulointerdito(Interdito))),
+													List
+										),
                  		  	   			comprimento( List, N ),
                  		  	  		 	N == 0
                  		  	   			).
 
 
 
-%-----------------------------------------------------------------------------------------------------
+% ////////////////////////////////////////////////////////////////////////////////////////////////////
 % Manipular invariantes que designem restrições à inserção e à remoção de conhecimento POSITIVO do sistema
-%-----------------------------------------------------------------------------------------------------
+% ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 % ----------------------------------------------------------------------------------------------------
 % Invariante que năo permite a inserçăo de conhecimento de um utente com um id já existente
@@ -300,43 +289,6 @@ nulointerdito( i6 ).
 
 
 
-%-----------------------------------------------------------------------------------------------------
-% Manipular invariantes que designem restrições à inserção e à remoção de conhecimento NEGATIVO do sistema
-%-----------------------------------------------------------------------------------------------------
-
-% ----------------------------------------------------------------------------------------------------
-% Invariante estrutural: nao permitir a insercao de negação forte de utente repetido
-+(-utente(Id, Nome, Idade, Morada)) :: (
-										solucoes(Id, -utente(Id, Nome, Idade, Morada), S),
-										comprimento(S, N),
-									 	N == 1
-										).
-
-% ----------------------------------------------------------------------------------------------------
-% Invariante estrutural: nao permitir a insercao de negação forte de prestador repetido
-+(-prestador(Id, Nome, Especialidade, Instituicao)) :: (
-										solucoes(Id, -prestador(Id, Nome, Especialidade, Instituicao), S),
-										comprimento(S, N),
-									 	N == 1
-										).
-
-% ----------------------------------------------------------------------------------------------------
-% Invariante estrutural: nao permitir a insercao de negação forte de cuidado repetido
-+(-cuidado(Dat, Utente, Prestador, Data, Cuidado)) :: (
-										solucoes((Dat,U,P,D,C), -cuidado(Dat, Utente, Prestador, Data, Cuidado), S),
-										comprimento(S, N),
-									 	N == 1
-										).
-
-% ----------------------------------------------------------------------------------------------------
-% Invariante estrutural: nao permitir a insercao de negação forte de recibo
-+(-recibo(Id, U, N, M, E, I, Dat, D, C)) :: fail.
-
-
-
-
-
-
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
 % ////////////////////////////////////// Predicados importantes //////////////////////////////////////
 % ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -351,39 +303,100 @@ demo( Questao,desconhecido ) :-
     nao( Questao ),
     nao( -Questao ).
 
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Extensao do meta-predicado demoL: ListaQuestoes,ListaRespostas -> {V,F,D}
+% Responde individualmente às questões de uma lista de questões
+demoL([],[]).
+demoL([Q|TQ],[R|TR]) :- demo(Q,R), demoL(TQ,TR).
+
+% ----------------------------------------------------------------------------------------------------
+% Extensao do meta-predicado demoComp: ConjQuestoes,Resposta -> {verdadeiro, falso, desconhecido}
+% Trata de fazer o demo de disjunção, conjunção ou nada
+demoComp(Q1 e Q2, R) :-
+					demo(Q1,R1),
+					demoComp(Q2,R2),
+					conjuncao(R1,R2,R).
+demoComp(Q1 ou Q2, R) :-
+					demo(Q1,R1),
+					demoComp(Q2,R2),
+					disjuncao(R1,R2,R).
+demoComp(Q1, R) :- demo(Q1,R).
+
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Extensao do meta-predicado conjuncao: ValorLogico,ValorLogico,ValorLogico -> {V,F,D}
+% O terceiro argumento corresponde ao valor lógico correspondente à conjunção dos valores lógicos dos dois primeiros argumentos
+% Entendem-se valores lógicos como: verdadeiro, falso ou desconhecido
+conjuncao(verdadeiro,verdadeiro,verdadeiro).
+conjuncao(verdadeiro,desconhecido,desconhecido).
+conjuncao(verdadeiro,falso,falso).
+conjuncao(desconhecido,verdadeiro,desconhecido).
+conjuncao(desconhecido,desconhecido,desconhecido).
+conjuncao(desconhecido,falso,falso).
+conjuncao(falso,_,falso).
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Extensao do meta-predicado disjuncao: ValorLogico,ValorLogico,ValorLogico -> {V,F,D}
+% O terceiro argumento corresponde ao valor lógico correspondente à conjunção dos valores lógicos dos dois primeiros argumentos
+% Entendem-se valores lógicos como: verdadeiro, falso ou desconhecido
+disjuncao(verdadeiro,verdadeiro,verdadeiro).
+disjuncao(verdadeiro,desconhecido,verdadeiro).
+disjuncao(verdadeiro,falso,verdadeiro).
+disjuncao(desconhecido,verdadeiro,verdadeiro).
+disjuncao(desconhecido,desconhecido,desconhecido).
+disjuncao(desconhecido,falso,desconhecido).
+disjuncao(falso,verdadeiro,verdadeiro).
+disjuncao(falso,desconhecido,desconhecido).
+disjuncao(falso,falso,falso).
+
+
 
 %-----------------------------------------------------------------------------------------------------
 % Evolução do conhecimento 
 % permite adicionar conhecimento ou atualizar conhecimento imperfeito
 %-----------------------------------------------------------------------------------------------------
-% A VERIFICAR -----------------------------------------------------------------------------------------------------------@@@@@@@@@@@@@@@@@@@@@@
+
+% Extensao do predicado utente: IdUt,Nome,Idade,Morada -> {V,F,D}
+% Extensao do predicado prestador: IdPrest,Nome,Especialidade,Instituicao -> {V,F,D}
+% Extensao do predicado cuidado: Data,IdUt,IdPrest,Descricao,Custo -> {V,F,D}
+% Extensao do predicado recibo: IdRecibo, IdUt, NomeUt, Morada, Especialidade, Instituicao, Data, Descricao, Custo -> {V,F,D}
+
 
 evolucao(utente(Id,Nome,Idade,Morada)):-
 		demo(utente(Id,Nome,Idade,Morada),desconhecido),
-		findall(utente(Id,N,I,M), utente(Id,N,I,M),L),
+		solucoes(utente(Id,N,I,M), utente(Id,N,I,M),L),
 		remocaoL(utente(Id,Nome,Idade,Morada),L).
 
 evolucao(utente(Id,Nome,Idade,Morada)):-
 		demo(utente(Id,Nome,Idade,Morada),falso),
-		registar(utente(Id,Nome,Idade,Morada)).
+		inserir(utente(Id,Nome,Idade,Morada)).
 
-evolucao(cuidadoPrestado( Id,Desc,Inst,Cidade ) ):-
-		demo(cuidadoPrestado(Id,Desc,Inst,Cidade) ,desconhecido),
-		findall(cuidadoPrestado(Id,E,I,C), cuidadoPrestado(Id,E,I,C),L),
-		remocaoL(cuidadoPrestado( Id,Desc,Inst,Cidade ),L).
+evolucao(prestador( Id,Nome,Especialidade,Instituicao ) ):-
+		demo(prestador(Id,Nome,Especialidade,Instituicao),desconhecido),
+		solucoes(prestador(Id,N,E,I), prestador(Id,N,E,I),L),
+		remocaoL(prestador(Id,Nome,Especialidade,Instituicao),L).
 
-evolucao(cuidadoPrestado( Id,Desc,Inst,Cidade ) ):-
-		demo(cuidadoPrestado(Id,Desc,Inst,Cidade),falso),
-		registar(cuidadoPrestado( X,Desc,Inst,Cidade)).
+evolucao(prestador( Id,Nome,Especialidade,Instituicao ) ):-
+		demo(prestador(Id,Nome,Especialidade,Instituicao),falso),
+		inserir(prestador(Id,Nome,Especialidade,Instituicao)).
 
-evolucao(atoMedico(Data,IdU, IdS,Custo)):-
-		demo(atoMedico(Data,IdU, IdS,Custo),desconhecido),
-		findall(atoMedico(Data,IdU, IdS,Custo), atoMedico(Data,IdU, IdS,Custo),L),
-		remocaoL(atoMedico(Data,IdU, IdS,Custo),L).
+evolucao(cuidado(Data,IdU,IdP,Descricao,Custo)):-
+		demo(cuidado(Data,IdU,IdP,Descricao,Custo),desconhecido),
+		solucoes(cuidado(Data,IdU,IdP,Descricao,Custo), cuidado(Data,IdU,IdP,Descricao,Custo),L),
+		remocaoL(cuidado(Data,IdU,IdP,Descricao,Custo),L).
 
-evolucao(atoMedico(Data,IdU, IdS,Custo)):-
-		demo(atoMedico(Data,IdU, IdS,Custo),falso),
-		registar(atoMedico(Data,IdU, IdS,Custo)).
+evolucao(cuidado(Data,IdU,IdP,Descricao,Custo)):-
+		demo(cuidado(Data,IdU,IdP,Descricao,Custo),falso),
+		inserir(cuidado(Data,IdU,IdP,Descricao,Custo)).
+
+evolucao(recibo(Data,IdU, IdS,Custo)):-
+		demo(recibo(IdR, IdU, NomeU, Morada, Especialidade, Instituicao, Data, Descricao, Custo),desconhecido),
+		solucoes(recibo(IdR, IdU, NomeU, Morada, Especialidade, Instituicao, Data, Descricao, Custo), recibo(IdR, IdU, NomeU, Morada, Especialidade, Instituicao, Data, Descricao, Custo),L),
+		remocaoL(recibo(IdR, IdU, NomeU, Morada, Especialidade, Instituicao, Data, Descricao, Custo),L).
+
+evolucao(recibo(IdR, IdU, NomeU, Morada, Especialidade, Instituicao, Data, Descricao, Custo)):-
+		demo(recibo(IdR, IdU, NomeU, Morada, Especialidade, Instituicao, Data, Descricao, Custo),falso),
+		inserir(recibo(IdR, IdU, NomeU, Morada, Especialidade, Instituicao, Data, Descricao, Custo)).
 
 
 
@@ -394,7 +407,7 @@ evolucao(atoMedico(Data,IdU, IdS,Custo)):-
 % ////////////////////////////////////////// Predicados Extra ////////////////////////////////////////
 % ----------------------------------------------------------------------------------------------------
 % Extensăo do predicado inserir: Termo -> {V,F}
-% mesmo que EVOLUCAO
+% mesmo que EVOLUCAO da PARTE 1
 
 inserir(Termo) :-
 	solucoes(Invariante, +Termo::Invariante, Lista),
@@ -486,7 +499,6 @@ somatorio([X|Y], R) :-
 
 nao(Q):- Q, !, fail.
 nao(Q).
-
 
 
 % ----------------------------------------------------------------------------------------------------
