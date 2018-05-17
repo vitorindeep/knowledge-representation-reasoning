@@ -12,15 +12,15 @@
     "path" : null,
     "project_path" : null,
     "properties" : {
-        "cacheKey" : "148CDF3B",
+        "cacheKey" : "C06BE486",
         "caption" : "dadosFull",
-        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=dadosFull&cache_key=148CDF3B",
-        "displayedObservations" : "41188",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=dadosFull&cache_key=C06BE486",
+        "displayedObservations" : 41188,
         "environment" : "",
         "object" : "dadosFull",
-        "preview" : "0",
-        "totalObservations" : "41188",
-        "variables" : "21"
+        "preview" : 0,
+        "totalObservations" : 41188,
+        "variables" : 21
     },
     "relative_order" : 3,
     "source_on_save" : false,

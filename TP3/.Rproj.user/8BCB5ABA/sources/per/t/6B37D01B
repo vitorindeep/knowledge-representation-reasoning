@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1525950670975.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "6B37D01B",
+    "lastKnownWriteTime" : 31525476564467712,
+    "last_content_update" : 1525950670975,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "7C69204F",
+        "caption" : "dadosOri",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=dadosOri&cache_key=7C69204F",
+        "displayedObservations" : 4119,
+        "environment" : "",
+        "object" : "dadosOri",
+        "preview" : 0,
+        "totalObservations" : 4119,
+        "variables" : 21
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
