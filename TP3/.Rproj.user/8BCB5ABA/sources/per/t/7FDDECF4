@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1526563891776.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "7FDDECF4",
+    "lastKnownWriteTime" : 7226435094589303907,
+    "last_content_update" : 1526563891776,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "B22D424C",
+        "caption" : "dadosRounded",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=dadosRounded&cache_key=B22D424C",
+        "displayedObservations" : "4119",
+        "environment" : "",
+        "object" : "dadosRounded",
+        "preview" : "0",
+        "totalObservations" : "4119",
+        "variables" : "21"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
